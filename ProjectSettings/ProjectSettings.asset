@@ -443,7 +443,7 @@ PlayerSettings:
   logObjCUncaughtExceptions: 1
   enableCrashReportAPI: 0
   cameraUsageDescription: Required for augmented reality support.
-  locationUsageDescription: 
+  locationUsageDescription: NSLocationWhenInUseUsageDescription
   microphoneUsageDescription: 
   switchNetLibKey: 
   switchSocketMemoryPoolSize: 6144
