@@ -11,43 +11,43 @@ using UnityEngine.Android;
 #elif UNITY_IOS
 #endif
 
-
 public class TutorialSceneBackgroundScript : MonoBehaviour
 {
+    void Start() {
+        CheckPermissions();
+    }
+
     void Update()
     {
         // TODO: Make this a click handler
         if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
-
             RequestPermissions();
         }
     }
 
 #if UNITY_ANDROID
+    string[] permissions = { Permission.Camera };
     private void RequestPermissions()
     {
-        // string[] permissions = { Permission.Camera };
+        AndroidRuntimePermissions.Permission[] results = new AndroidRuntimePermissions.Permission[permissions.Length];
 
-        // AndroidRuntimePermissions.Permission[] results = new AndroidRuntimePermissions.Permission[permissions.Length];
+        for (int i = 0; i < permissions.Length; i++)
+        {
+            Debug.Log($"Requesting access to {permissions[i]}");
+            results[i] = AndroidRuntimePermissions.RequestPermission(permissions[i]);
+        }
 
-        // for (int i = 0; i < permissions.Length; i++)
-        // {
-        //     Debug.Log($"Requesting access to {permissions[i]}");
-        //     results[i] = AndroidRuntimePermissions.RequestPermission(permissions[i]);
-        // }
-        AndroidRuntimePermissions.Permission[] results = AndroidRuntimePermissions.RequestPermissions(Permission.FineLocation, Permission.Camera);
-
-        bool deniedPermission = false;
+        ArrayList deniedPermission = new ArrayList();
         for (int i = 0; i < results.Length; i++)
         {
             if (results[i] == AndroidRuntimePermissions.Permission.Denied)
             {
-                deniedPermission = true;
+                deniedPermission.Add(permissions[i]);
             }
         }
 
-        if (deniedPermission)
+        if (deniedPermission.Count > 0)
         {
             //TODO: Show Dialog
             Debug.Log("Show dialog to manually adjust permissions.");
@@ -56,6 +56,21 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
         {
             SwitchScene();
             Debug.Log("Permissions Granted");
+        }
+    }
+
+    private void CheckPermissions()
+    {
+        AndroidRuntimePermissions.Permission[] checkedPermissions = AndroidRuntimePermissions.CheckPermissions(permissions);
+        bool granted = true;
+        for (int i = 0; i < checkedPermissions.Length; i++) {
+            if(checkedPermissions[i] != AndroidRuntimePermissions.Permission.Granted) {
+                granted = false;
+                break;
+            }
+        }
+        if(granted) {
+            SwitchScene();
         }
     }
 #endif
