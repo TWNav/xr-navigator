@@ -12,60 +12,55 @@ using UnityEngine.Android;
 #endif
 
 
-
-
 public class TutorialSceneBackgroundScript : MonoBehaviour
 {
-    private bool isLocationEnabled {
-        get {
-            return Input.location.isEnabledByUser;
-        }
-    }
-    void Start() {
-       RequestPermissions();
-    }
     void Update()
     {
-        if(!isLocationEnabled) return;
         // TODO: Make this a click handler
-        if(Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began) {
-    
-            SwitchScene();
-        }    
-    }
+        if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
 
-    private void RequestPermissions()
-    {
-        #if UNITY_ANDROID
-        RequestPermissionIfNotGiven(Permission.FineLocation);
-        RequestPermissionIfNotGiven(Permission.Camera);
-        #elif UNITY_IOS
-        //TODO: Implement permissions for iOS
-        Debug.Log("Request Permissions iOS");
-        #endif
+            RequestPermissions();
+        }
     }
 
 #if UNITY_ANDROID
-    private void RequestPermissionIfNotGiven(string permission)
+    private void RequestPermissions()
     {
-        if(!Permission.HasUserAuthorizedPermission(permission))
+        // string[] permissions = { Permission.Camera };
+
+        // AndroidRuntimePermissions.Permission[] results = new AndroidRuntimePermissions.Permission[permissions.Length];
+
+        // for (int i = 0; i < permissions.Length; i++)
+        // {
+        //     Debug.Log($"Requesting access to {permissions[i]}");
+        //     results[i] = AndroidRuntimePermissions.RequestPermission(permissions[i]);
+        // }
+        AndroidRuntimePermissions.Permission[] results = AndroidRuntimePermissions.RequestPermissions(Permission.FineLocation, Permission.Camera);
+
+        bool deniedPermission = false;
+        for (int i = 0; i < results.Length; i++)
         {
-            Debug.Log($"Requesting access to {permission}");
-            Permission.RequestUserPermission(permission);
-            //TODO: Find a better way to recognize when permission has been granted
-            while(!Permission.HasUserAuthorizedPermission(permission))
+            if (results[i] == AndroidRuntimePermissions.Permission.Denied)
             {
-                Thread.Sleep(500);
+                deniedPermission = true;
             }
-            Debug.Log(String.Format("Permission for {0} is {1}", permission, Permission.HasUserAuthorizedPermission(permission)));
+        }
+
+        if (deniedPermission)
+        {
+            //TODO: Show Dialog
+            Debug.Log("Show dialog to manually adjust permissions.");
         }
         else
         {
-            Debug.Log($"Already had permission to {permission}");
+            SwitchScene();
+            Debug.Log("Permissions Granted");
         }
     }
 #endif
-    private void SwitchScene() {
+    private void SwitchScene()
+    {
         SceneManager.LoadScene("TWNavigatorScene");
     }
 }
