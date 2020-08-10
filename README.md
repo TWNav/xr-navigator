@@ -11,7 +11,15 @@
 7. In the open Unity project, go to Assets > Open C# Project.
    This should open the Unity project in VSCode. You should see two extra files in the file explorer, `Assembly-CSharp.csproj` and `xr-navigator.sln`. Try writing some Unity specific code and you should have auto-completion/IntelliSense now :)
 
-## Building and Running the Project
+## Building and Running the Project (Android)
+
 1. Download and install Vysor (Allows you to project your phone screen to the computer) https://www.vysor.io/
-2. Plug in your phone and click ```Connect Network Device``` in Vysor.
-3. In Unity, click File > Build and Run.
+2. Plug in your phone and click `Connect Network Device` in Vysor.
+3. In Unity, click File > Build and Run. or (command + B)
+
+## Debugging
+
+Execute the following the commands in the terminal:
+
+- `cd Library/Android/sdk/platform-tools/`
+- `./adb logcat -s Unity dalvikvm DEBUG`
