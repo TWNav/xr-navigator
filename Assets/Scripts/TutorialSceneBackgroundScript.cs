@@ -1,10 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System;
 
 #if UNITY_ANDROID
 using UnityEngine.Android;
@@ -13,22 +9,18 @@ using UnityEngine.Android;
 
 public class TutorialSceneBackgroundScript : MonoBehaviour
 {
-    void Start() {
-        CheckPermissions();
-    }
+    [SerializeField]
+    private GameObject settingsPanel;
 
-    void Update()
+    void Start()
     {
-        // TODO: Make this a click handler
-        if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
-        {
-            RequestPermissions();
-        }
+        settingsPanel.SetActive(false);
+        CheckPermissions();
     }
 
 #if UNITY_ANDROID
     string[] permissions = { Permission.Camera };
-    private void RequestPermissions()
+    public void RequestPermissions()
     {
         AndroidRuntimePermissions.Permission[] results = new AndroidRuntimePermissions.Permission[permissions.Length];
 
@@ -41,7 +33,7 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
         ArrayList deniedPermission = new ArrayList();
         for (int i = 0; i < results.Length; i++)
         {
-            if (results[i] == AndroidRuntimePermissions.Permission.Denied)
+            if (results[i] != AndroidRuntimePermissions.Permission.Granted)
             {
                 deniedPermission.Add(permissions[i]);
             }
@@ -51,6 +43,7 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
         {
             //TODO: Show Dialog
             Debug.Log("Show dialog to manually adjust permissions.");
+            settingsPanel.SetActive(true);
         }
         else
         {
@@ -63,15 +56,24 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
     {
         AndroidRuntimePermissions.Permission[] checkedPermissions = AndroidRuntimePermissions.CheckPermissions(permissions);
         bool granted = true;
-        for (int i = 0; i < checkedPermissions.Length; i++) {
-            if(checkedPermissions[i] != AndroidRuntimePermissions.Permission.Granted) {
+        for (int i = 0; i < checkedPermissions.Length; i++)
+        {
+            if (checkedPermissions[i] != AndroidRuntimePermissions.Permission.Granted)
+            {
                 granted = false;
                 break;
             }
         }
-        if(granted) {
+        if (granted)
+        {
             SwitchScene();
         }
+    }
+
+    public void OpenSettings()
+    {
+        AndroidRuntimePermissions.OpenSettings();
+        settingsPanel.SetActive(false);
     }
 #endif
     private void SwitchScene()
