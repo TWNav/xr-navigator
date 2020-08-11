@@ -75,6 +75,22 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
         AndroidRuntimePermissions.OpenSettings();
         settingsPanel.SetActive(false);
     }
+
+#elif UNITY_IOS
+    public void OpenSettings() {
+        Debug.Log("NYI");
+    }
+
+    private void CheckPermissions()
+    {
+        Debug.Log("NYI");
+    }
+    
+    public void RequestPermissions()
+    {
+        Debug.Log("NYI");
+    }
+
 #endif
     private void SwitchScene()
     {
