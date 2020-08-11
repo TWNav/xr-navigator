@@ -2,6 +2,9 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using System.Runtime.InteropServices;
+using AOT;
+
 #if UNITY_ANDROID
 using UnityEngine.Android;
 #elif UNITY_IOS
@@ -15,7 +18,7 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
     void Start()
     {
         settingsPanel.SetActive(false);
-        CheckPermissions();
+        CheckPermissions();        
     }
 
 #if UNITY_ANDROID
@@ -77,20 +80,114 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
     }
 
 #elif UNITY_IOS
+
+    private CLAuthorizationStatus locationAuthorizationStatus = CLAuthorizationStatus.NotDetermined;
+    private AVAuthorizationStatus avAuthorizationStatus = AVAuthorizationStatus.NotDetermined;
+
+
+
+    
+
+    static LocationAuthorizationDelegate locationDelegate;
+    static AVAuthorizationDelegate aVAuthorizationDelegate;
+
+
     public void OpenSettings() {
-        Debug.Log("NYI");
+        Debug.Log("NYI - Opening Settings");
     }
 
     private void CheckPermissions()
     {
-        Debug.Log("NYI");
+        CocoaHelpersBridge.SetLocationAuthorizationCallback(LocationAuthCallback);
+        CocoaHelpersBridge.SetCameraAuthorizationCallback(AVAuthCallback);
+
+        avAuthorizationStatus = CocoaHelpersBridge.GetCameraAuthorizationStatus();
+        locationAuthorizationStatus = CocoaHelpersBridge.GetLocationAuthorizationStatus();
+
+        Debug.Log($"Location Authorization ${locationAuthorizationStatus}");
+        Debug.Log($"AVAuthorization Status ${avAuthorizationStatus}");
+
+        if (avAuthorizationStatus == AVAuthorizationStatus.Authorized && 
+            (locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedAlways || locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedWhenInUse)
+            ) {
+            SwitchScene();
+        }
     }
     
-    public void RequestPermissions()
-    {
-        Debug.Log("NYI");
+    public void RequestPermissions() {
+        Debug.Log("Requesting Permissions Location");
+
+        
+        locationDelegate = LocationCallback;
+        aVAuthorizationDelegate = AVCallback;
+        Debug.Log($"Location Permission {locationAuthorizationStatus}");
+        switch (locationAuthorizationStatus)
+        {
+            case CLAuthorizationStatus.NotDetermined:        
+                Debug.Log($"Location Permission Requesting");                    
+                CocoaHelpersBridge.RequestAuthorizationStatusLocation();
+                return;
+                
+            case CLAuthorizationStatus.Denied:
+                OpenSettings();
+                return;
+            default:
+                break;
+        }
+
+        Debug.Log("Requesting Permissions Camera");
+
+   
+        Debug.Log($"Camera Permission {avAuthorizationStatus}");
+        switch (avAuthorizationStatus) {
+            case AVAuthorizationStatus.NotDetermined:                
+                CocoaHelpersBridge.RequestAuthorizationStatusCamera();
+                return;
+            case AVAuthorizationStatus.Denied:
+                ShowPermissionsNeedededPanel();
+                return;
+            default:
+                break;
+        }
+
+        Debug.Log("Checking Permissions");
+
+
+        if (avAuthorizationStatus == AVAuthorizationStatus.Authorized &&
+            (locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedWhenInUse || locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedAlways  )) {
+                SwitchScene();
+            }
+    }
+    
+    private void LocationCallback(CLAuthorizationStatus status) {
+        locationAuthorizationStatus = status;
+        Debug.Log($"Location Callback received {status}");
+        RequestPermissions();
+    } 
+
+    [MonoPInvokeCallback(typeof(LocationAuthorizationDelegate))]
+    public static void LocationAuthCallback(CLAuthorizationStatus status) {
+        if (locationDelegate != null) {
+            locationDelegate(status);
+        }
     }
 
+     public void AVCallback(AVAuthorizationStatus status) { 
+        avAuthorizationStatus = status;
+        Debug.Log($"Location Callback received {status}");
+        RequestPermissions();
+     }
+
+    [MonoPInvokeCallback(typeof(AVAuthorizationDelegate))]
+    public static void AVAuthCallback(AVAuthorizationStatus status) {
+        if (locationDelegate != null) {
+            aVAuthorizationDelegate(status);
+        }
+    }
+
+    private void ShowPermissionsNeedededPanel() {
+        Debug.Log("Show permissions neeeded");
+    }
 #endif
     private void SwitchScene()
     {
