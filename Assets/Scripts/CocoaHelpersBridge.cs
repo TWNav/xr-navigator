@@ -59,7 +59,7 @@ public class CocoaHelpersBridge : MonoBehaviour
 
     [DllImport("__Internal")]
     private static extern void framework_application_openAppSettings();
-    #endif
+    
 
     // CLLocation Interop
 
@@ -138,4 +138,5 @@ public class CocoaHelpersBridge : MonoBehaviour
         var sf = st.GetFrame(1);
         UnityEngine.Debug.Log($"D/{sf}->{message}");
     }
+    #endif
 }

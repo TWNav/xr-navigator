@@ -684,6 +684,9 @@ GameObject:
   - component: {fileID: 1367712939}
   - component: {fileID: 1367712942}
   - component: {fileID: 1367712941}
+  - component: {fileID: 1367712945}
+  - component: {fileID: 1367712944}
+  - component: {fileID: 1367712943}
   m_Layer: 0
   m_Name: AR Session Origin
   m_TagString: Untagged
@@ -731,8 +734,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ab0e80cee9cc1d44928bfe488dd1e2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PointCloudPrefab: {fileID: 8018217756689690542, guid: ba09c5d3d66a0432c946b28971a88662,
-    type: 3}
+  m_PointCloudPrefab: {fileID: 0}
 --- !u!114 &1367712942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -748,6 +750,45 @@ MonoBehaviour:
   m_PlanePrefab: {fileID: 2579696665129775637, guid: 502bf0e72962449c4ae2f88ab6a96c44,
     type: 3}
   m_DetectionMode: -1
+--- !u!114 &1367712943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367712938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AnchorPrefab: {fileID: 3926804650924284942, guid: 8253413d767ed4071bbc30061fe49384,
+    type: 3}
+--- !u!114 &1367712944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367712938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84d1f49a4eba74801a04a001b8d2c08b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1367712945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367712938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa17d122634046b4a8e23048891fafc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RaycastPrefab: {fileID: 0}
 --- !u!1 &1391435566
 GameObject:
   m_ObjectHideFlags: 0
@@ -816,7 +857,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
