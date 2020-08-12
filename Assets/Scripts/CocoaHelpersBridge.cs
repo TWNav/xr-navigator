@@ -57,6 +57,8 @@ public class CocoaHelpersBridge : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void framework_cameraManager_setCallback(AVAuthorizationDelegate del);
 
+    [DllImport("__Internal")]
+    private static extern void framework_application_openAppSettings();
     #endif
 
     // CLLocation Interop
@@ -117,6 +119,15 @@ public class CocoaHelpersBridge : MonoBehaviour
         if (Application.platform == RuntimePlatform.IPhonePlayer) {             
             DebugLog("Called");
             framework_cameraManager_setCallback (del);
+        }
+        #endif
+    }
+
+    public static void OpenAppSettings() {
+        #if UNITY_IOS
+        if (Application.platform == RuntimePlatform.IPhonePlayer) {             
+            DebugLog("Called");
+            framework_application_openAppSettings();
         }
         #endif
     }

@@ -26,6 +26,10 @@ extern "C" {
   AVAuthorizationStatus framework_cameraManager_getAuthorizationStatus(void);
   void framework_cameraManager_requestAuthorizationStatus(void);
   void framework_cameraManager_setCallback(AVAuthorizationStatusCallback callback);
+
+// Application Interface
+  void framework_application_openAppSettings();
+
 #ifdef __cplusplus
 }
 #endif

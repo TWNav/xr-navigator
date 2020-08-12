@@ -39,3 +39,10 @@ void framework_cameraManager_setCallback(AVAuthorizationStatusCallback callback)
     callback(status);
   }];
 }
+
+// Framework Appication
+void framework_application_openAppSettings() {
+  [UIApplication.sharedApplication openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]
+                                   options:@{}
+                         completionHandler:nil];
+}

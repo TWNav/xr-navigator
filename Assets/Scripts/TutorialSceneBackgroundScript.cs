@@ -101,7 +101,7 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
     static AVAuthorizationDelegate aVAuthorizationDelegate;
 
     public void OpenSettings() {
-        DebugLog("NYI - Opening Settings");
+        CocoaHelpersBridge.OpenAppSettings();
     }
 
     private void SetDelegatesAndCallbacks() {
