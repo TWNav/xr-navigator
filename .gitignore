@@ -78,3 +78,6 @@ crashlytics-build.properties
 
 # Streaming Assets
 /[Aa]ssets/[Ss]treamingAssets/*
+
+# Blend Meta Files
+*.blend1*
