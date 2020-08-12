@@ -29,7 +29,7 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
 
         for (int i = 0; i < permissions.Length; i++)
         {
-            Debug.Log($"Requesting access to {permissions[i]}");
+            DebugLog($"Requesting access to {permissions[i]}");
             results[i] = AndroidRuntimePermissions.RequestPermission(permissions[i]);
         }
 
@@ -44,9 +44,7 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
 
         if (deniedPermission.Count > 0)
         {
-            //TODO: Show Dialog
-            Debug.Log("Show dialog to manually adjust permissions.");
-            settingsPanel.SetActive(true);
+           ShowPermissionsNeededPanel();
         }
         else
         {
@@ -81,87 +79,83 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
 
 #elif UNITY_IOS
 
-    private CLAuthorizationStatus locationAuthorizationStatus = CLAuthorizationStatus.NotDetermined;
-    private AVAuthorizationStatus avAuthorizationStatus = AVAuthorizationStatus.NotDetermined;
+    private CLAuthorizationStatus locationAuthorizationStatus {
+        get {
+            return CocoaHelpersBridge.GetLocationAuthorizationStatus();
+        }
+    }
+    private AVAuthorizationStatus avAuthorizationStatus {
+        get {
+            return CocoaHelpersBridge.GetCameraAuthorizationStatus();
+        }
+    }
 
-
-
-    
+    private bool accessAuthorized {
+        get {
+            return avAuthorizationStatus == AVAuthorizationStatus.Authorized && 
+            (locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedAlways || locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedWhenInUse);
+        }
+    }
 
     static LocationAuthorizationDelegate locationDelegate;
     static AVAuthorizationDelegate aVAuthorizationDelegate;
 
-
     public void OpenSettings() {
-        Debug.Log("NYI - Opening Settings");
+        DebugLog("NYI - Opening Settings");
     }
 
-    private void CheckPermissions()
-    {
+    private void SetDelegatesAndCallbacks() {
+        locationDelegate = LocationCallback;
+        aVAuthorizationDelegate = AVCallback;
         CocoaHelpersBridge.SetLocationAuthorizationCallback(LocationAuthCallback);
         CocoaHelpersBridge.SetCameraAuthorizationCallback(AVAuthCallback);
+        
+    }
 
-        avAuthorizationStatus = CocoaHelpersBridge.GetCameraAuthorizationStatus();
-        locationAuthorizationStatus = CocoaHelpersBridge.GetLocationAuthorizationStatus();
-
-        Debug.Log($"Location Authorization ${locationAuthorizationStatus}");
-        Debug.Log($"AVAuthorization Status ${avAuthorizationStatus}");
-
-        if (avAuthorizationStatus == AVAuthorizationStatus.Authorized && 
-            (locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedAlways || locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedWhenInUse)
-            ) {
+    private void CheckPermissions() {
+        if (accessAuthorized) {
+            DebugLog("Authorized for access to system permissions");
             SwitchScene();
         }
     }
     
     public void RequestPermissions() {
-        Debug.Log("Requesting Permissions Location");
-
-        
-        locationDelegate = LocationCallback;
-        aVAuthorizationDelegate = AVCallback;
-        Debug.Log($"Location Permission {locationAuthorizationStatus}");
+        SetDelegatesAndCallbacks();
+        DebugLog($"Location Permission {locationAuthorizationStatus}");
         switch (locationAuthorizationStatus)
         {
-            case CLAuthorizationStatus.NotDetermined:        
-                Debug.Log($"Location Permission Requesting");                    
+            case CLAuthorizationStatus.NotDetermined:                
+                DebugLog("Requesting Permissions Location");
                 CocoaHelpersBridge.RequestAuthorizationStatusLocation();
                 return;
                 
             case CLAuthorizationStatus.Denied:
-                OpenSettings();
+                ShowPermissionsNeededPanel();
                 return;
             default:
                 break;
         }
 
-        Debug.Log("Requesting Permissions Camera");
+        DebugLog("Requesting Permissions Camera");
 
    
-        Debug.Log($"Camera Permission {avAuthorizationStatus}");
+        DebugLog($"Camera Permission {avAuthorizationStatus}");
         switch (avAuthorizationStatus) {
-            case AVAuthorizationStatus.NotDetermined:                
+            case AVAuthorizationStatus.NotDetermined:   
+              DebugLog("Requesting Permissions Camera");             
                 CocoaHelpersBridge.RequestAuthorizationStatusCamera();
                 return;
             case AVAuthorizationStatus.Denied:
-                ShowPermissionsNeedededPanel();
+                ShowPermissionsNeededPanel();
                 return;
             default:
                 break;
         }
-
-        Debug.Log("Checking Permissions");
-
-
-        if (avAuthorizationStatus == AVAuthorizationStatus.Authorized &&
-            (locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedWhenInUse || locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedAlways  )) {
-                SwitchScene();
-            }
+        CheckPermissions();
     }
     
     private void LocationCallback(CLAuthorizationStatus status) {
-        locationAuthorizationStatus = status;
-        Debug.Log($"Location Callback received {status}");
+        DebugLog($"Location Callback received {status}");
         RequestPermissions();
     } 
 
@@ -173,8 +167,7 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
     }
 
      public void AVCallback(AVAuthorizationStatus status) { 
-        avAuthorizationStatus = status;
-        Debug.Log($"Location Callback received {status}");
+        DebugLog($"Camera Callback received {status}");
         RequestPermissions();
      }
 
@@ -185,12 +178,20 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
         }
     }
 
-    private void ShowPermissionsNeedededPanel() {
-        Debug.Log("Show permissions neeeded");
-    }
+
 #endif
+
+    private void ShowPermissionsNeededPanel() {
+        DebugLog("ShowPermissionsNeededPanel");
+         settingsPanel.SetActive(true);      
+    }
     private void SwitchScene()
     {
         SceneManager.LoadScene("TWNavigatorScene");
+    }
+
+
+    private static void DebugLog(string message) {
+        Debug.Log($"D/{message}");
     }
 }

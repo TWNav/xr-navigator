@@ -11,7 +11,6 @@
 
 @interface LocationManager ()<CLLocationManagerDelegate>
 @property (strong, atomic) CLLocationManager *cllocManager;
-@property (nonatomic) CLAuthorizationStatus authStatus;
 @property (strong, atomic) void (^callback)(CLAuthorizationStatus);
 
 + (LocationManager*)sharedInstance;
@@ -37,7 +36,6 @@
   if (self) {
     self.cllocManager = [[CLLocationManager alloc] init];
     self.cllocManager.delegate = self;
-    self.authStatus = kCLAuthorizationStatusNotDetermined;
   }
   return self;
 }

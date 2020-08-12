@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using System.Runtime.InteropServices;
 using AOT;
@@ -64,6 +65,7 @@ public class CocoaHelpersBridge : MonoBehaviour
     public static CLAuthorizationStatus GetLocationAuthorizationStatus() {
         #if UNITY_IOS
         if (Application.platform == RuntimePlatform.IPhonePlayer) {             
+            DebugLog("Called");
             return framework_locationManager_getAuthorizationStatus();
         }
         #endif
@@ -73,6 +75,7 @@ public class CocoaHelpersBridge : MonoBehaviour
     public static void RequestAuthorizationStatusLocation() {
         #if UNITY_IOS
         if (Application.platform == RuntimePlatform.IPhonePlayer) {             
+            DebugLog("Called");
             framework_locationManager_requestAuthorizationStatus ();
         }
         #endif
@@ -81,6 +84,7 @@ public class CocoaHelpersBridge : MonoBehaviour
     public static void SetLocationAuthorizationCallback(LocationAuthorizationDelegate del) {
         #if UNITY_IOS
         if (Application.platform == RuntimePlatform.IPhonePlayer) {             
+            DebugLog("Called");
             framework_locationManager_setCallback (del);
         }
         #endif
@@ -92,6 +96,7 @@ public class CocoaHelpersBridge : MonoBehaviour
     public static AVAuthorizationStatus GetCameraAuthorizationStatus() {
         #if UNITY_IOS
         if (Application.platform == RuntimePlatform.IPhonePlayer) {             
+            DebugLog("Called");
             return framework_cameraManager_getAuthorizationStatus();
         }
         #endif
@@ -101,6 +106,7 @@ public class CocoaHelpersBridge : MonoBehaviour
     public static void RequestAuthorizationStatusCamera() {
         #if UNITY_IOS
         if (Application.platform == RuntimePlatform.IPhonePlayer) {             
+            DebugLog("Called");
             framework_cameraManager_requestAuthorizationStatus ();
         }
         #endif
@@ -109,8 +115,16 @@ public class CocoaHelpersBridge : MonoBehaviour
     public static void SetCameraAuthorizationCallback(AVAuthorizationDelegate del) {
         #if UNITY_IOS
         if (Application.platform == RuntimePlatform.IPhonePlayer) {             
+            DebugLog("Called");
             framework_cameraManager_setCallback (del);
         }
         #endif
+    }
+
+
+    private static void DebugLog(string message) {
+        var st = new StackTrace();
+        var sf = st.GetFrame(1);
+        UnityEngine.Debug.Log($"D/{sf}->{message}");
     }
 }
