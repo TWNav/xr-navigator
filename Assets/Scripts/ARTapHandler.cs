@@ -4,12 +4,16 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.EventSystems;
 using UnityEngine;
+using Microsoft.Azure.SpatialAnchors.Unity;
+using Microsoft.Azure.SpatialAnchors;
+
 public class ARTapHandler : MonoBehaviour
 {
     private ARRaycastManager aRRaycastManager;
     private Pose pose;
     private ARAnchorManager aRAnchorManager;
     private EventSystem eventSystem;
+    private AnchorConverter anchorConverter;
 
     private bool inputDidBegin {
         get {
@@ -27,6 +31,7 @@ public class ARTapHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        anchorConverter = FindObjectOfType<AnchorConverter>();
         aRRaycastManager = GetComponent<ARRaycastManager>();
         aRAnchorManager = GetComponent<ARAnchorManager>();
         eventSystem = FindObjectOfType<EventSystem>();
@@ -41,11 +46,23 @@ public class ARTapHandler : MonoBehaviour
         }
     }
     
-    private void PlaceAnchor()
+    private async void PlaceAnchor()
     {
         if(isValidPositionPhyRaycast())
         {
-            ARAnchor anchor = aRAnchorManager.AddAnchor(pose);
+            GameObject tempAnchor = Instantiate(new GameObject(), pose.position, pose.rotation);
+            CloudNativeAnchor cna = tempAnchor.AddComponent<CloudNativeAnchor>();
+            if(cna.CloudAnchor == null)
+            {
+                Debug.Log("Calling Native to Cloud");
+                cna.NativeToCloud();
+            }
+            Debug.Log($"CNA : {cna.enabled}");
+            CloudSpatialAnchor cloudAnchor = cna.CloudAnchor;
+            Debug.Log($"Cloud ID : {cloudAnchor.Identifier}");
+            Debug.Log($"AnchorConverter exists : {anchorConverter != null}");
+            await anchorConverter.CreateCloudAnchor(cloudAnchor);
+            Destroy(tempAnchor);
         } 
     }
     private bool isValidPositionARRaycast()

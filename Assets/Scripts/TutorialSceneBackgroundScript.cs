@@ -22,7 +22,7 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
     }
 
 #if UNITY_ANDROID
-    string[] permissions = { Permission.Camera };
+    string[] permissions = { Permission.Camera , Permission.FineLocation} ;
     public void RequestPermissions()
     {
         AndroidRuntimePermissions.Permission[] results = new AndroidRuntimePermissions.Permission[permissions.Length];
@@ -55,6 +55,7 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
 
     private void CheckPermissions()
     {
+        var lat = Input.location.lastData.latitude;
         AndroidRuntimePermissions.Permission[] checkedPermissions = AndroidRuntimePermissions.CheckPermissions(permissions);
         bool granted = true;
         for (int i = 0; i < checkedPermissions.Length; i++)
