@@ -15,10 +15,12 @@ public class AnchorConverter : MonoBehaviour
     private SpatialAnchorManager spatialAnchorManager;
 
     private ARAnchorManager aRAnchorManager;
-
+    private AnchorManager anchorManager;
     private bool anchorManagerIsSetup = false;
 
     private bool anchorFirstTimeFound = false;
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +28,7 @@ public class AnchorConverter : MonoBehaviour
         spatialAnchorManager = GetComponent<SpatialAnchorManager>();
         ARSession aRSession = FindObjectOfType<ARSession>();
         aRAnchorManager = FindObjectOfType<ARAnchorManager>();
+        anchorManager = FindObjectOfType<AnchorManager>();
         ARSession.stateChanged += AnchorConverter_SessionStateChange;
 
 
@@ -44,6 +47,7 @@ public class AnchorConverter : MonoBehaviour
             await spatialAnchorManager.CreateSessionAsync();
         }
         spatialAnchorManager.AnchorLocated += AnchorConverter_AnchorLocated;
+        
         await spatialAnchorManager.StartSessionAsync();
         ConfigureSensors();
         anchorManagerIsSetup = true;
@@ -66,28 +70,40 @@ public class AnchorConverter : MonoBehaviour
 
     private void AnchorConverter_AnchorLocated(object sender, AnchorLocatedEventArgs args)
     {
-        Debug.Log($"Anchor Located : {args.Anchor.Identifier}");
-
-        ARAnchor[] arFoundationAnchors = FindObjectsOfType<ARAnchor>();
-        Debug.Log($"The length og arFoundationAnchors: {arFoundationAnchors.Length}");
-        foreach (ARAnchor anchor in arFoundationAnchors)
+        if(args.Status == LocateAnchorStatus.Located)
         {
-            if(anchor.transform.position == args.Anchor.GetPose().position)
+            Debug.Log($"Anchor Located : {args.Anchor.Identifier}");
+
+            if(args.Identifier == null || args.Anchor == null)
             {
-                Debug.Log($"Trying to add anchor. {anchor.name}");
-                CloudNativeAnchor cna = anchor.gameObject.AddComponent<CloudNativeAnchor>();
-                 Debug.Log($"Assign CNA. {anchor.name}");
-                cna.CloudToNative(args.Anchor);
-                 Debug.Log($"CloudToNative. {anchor.name}");
-                GameObject anchorRender = Instantiate(arAnchorContainerRender,anchor.transform.position,anchor.transform.rotation);
-                  Debug.Log($"Instantiate Render. {anchor.name}");
-                anchorRender.transform.parent = anchor.transform;
-                  Debug.Log($"Assign Parent for Render. {anchor.name}");
-                break;
+                Debug.Log("Anchor or Identifier is null");
+                return;
             }
+
+            anchorManager.AddCloudSpatialAnchor(args.Anchor);
+
+            foreach(ARAnchor anchor in aRAnchorManager.trackables)
+            {
+                if(anchor == null)
+                {
+                    break;
+                }
+                if(anchor.transform.position == args.Anchor.GetPose().position)
+                {
+                    Debug.Log($"Trying to add anchor. {anchor.name}");
+                    AnchorProperties anchorProperties = anchor.gameObject.GetComponent<AnchorProperties>();
+                    anchorProperties.anchorID = args.Anchor.Identifier;
+                    Debug.Log($"AnchorID : {anchorProperties.anchorID}");
+                    GameObject anchorRender = Instantiate(arAnchorContainerRender,anchor.transform.position,anchor.transform.rotation);
+                    Debug.Log($"Instantiate Render. {anchor.name}");
+                    anchorRender.transform.SetParent(anchor.transform);
+                    Debug.Log($"Assign Parent for Render. {anchor.name}");
+                    break;
+                }
+            }
+            anchorFirstTimeFound = true;
+            Debug.Log($"Checking first AnchorFirstTimeFound :{anchorFirstTimeFound}");
         }
-        anchorFirstTimeFound = true;
-        Debug.Log($"Checking first AnchorFirstTimeFound :{anchorFirstTimeFound}");
     }
  
     private void ConfigureSensors()
@@ -99,16 +115,13 @@ public class AnchorConverter : MonoBehaviour
     }
 
     //method to find anchors based on geolocation + wifi
-    public void FindAnchorsByLocation()
+    public async void FindAnchorsByLocation()
     {
         Debug.Log("Getting ActiveWatchers");
 
         if(anchorFirstTimeFound)
         {
-
-            Debug.Log($"SpatialAnchorManager Session is about to Reset:{anchorFirstTimeFound}");
-             spatialAnchorManager.Session.Reset();
-             Debug.Log($"SpatialAnchorManager Reset Complete:{anchorFirstTimeFound}");
+            await ResetSession();
         }
         Debug.Log("Finding Anchors By Location");
         //set a neardevicecriteria to look for anchors within 5 meters
@@ -122,6 +135,26 @@ public class AnchorConverter : MonoBehaviour
         spatialAnchorManager.Session.CreateWatcher(anchorLocateCriteria);
         Debug.Log("Chen is crashing");
 
+    }
+
+    public async Task ResetSession()
+    {
+        foreach(ARAnchor anchor in aRAnchorManager.trackables)
+        {
+            if(anchor == null)
+            {
+                break;
+            }
+            Debug.Log($"-----ARFoundation removing {anchor.trackableId}");
+            aRAnchorManager.RemoveAnchor(anchor);
+            Debug.Log("-----ARFoundation removed anchor ");
+        }
+        anchorManager.ClearCloudSpatialAnchorList();
+        Debug.Log($"-----SpatialAnchorManager Session is about to Reset:{anchorFirstTimeFound}");
+        spatialAnchorManager.Session.Stop();
+        await spatialAnchorManager.ResetSessionAsync();
+        await spatialAnchorManager.StartSessionAsync();
+        Debug.Log($"-----SpatialAnchorManager Reset Complete:{anchorFirstTimeFound}");
     }
 
     public bool CheckLocationPermissions()
