@@ -9,21 +9,28 @@ using Microsoft.Azure.SpatialAnchors;
 
 public class ARTapHandler : MonoBehaviour
 {
+    [SerializeField]
+
+    private GameObject anchorContainerRender;
     private ARRaycastManager aRRaycastManager;
     private Pose pose;
     private ARAnchorManager aRAnchorManager;
     private EventSystem eventSystem;
     private AnchorConverter anchorConverter;
-
-    private bool inputDidBegin {
-        get {
+    private AnchorManager anchorManager;
+    
+    private bool inputDidBegin
+    {
+        get
+        {
             return Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began;
         }
     }
 
     private bool inputNotTouchingUIElement
     {
-        get{
+        get
+        {
             return eventSystem == null || !eventSystem.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
         }
     }
@@ -35,69 +42,100 @@ public class ARTapHandler : MonoBehaviour
         aRRaycastManager = GetComponent<ARRaycastManager>();
         aRAnchorManager = GetComponent<ARAnchorManager>();
         eventSystem = FindObjectOfType<EventSystem>();
+        anchorManager = FindObjectOfType<AnchorManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(inputDidBegin && inputNotTouchingUIElement)
+        if (inputDidBegin && inputNotTouchingUIElement)
         {
-           PlaceAnchor();
+            CloudSpatialAnchor cloudSpatialAnchor = isValidAnchorPhyRaycast();
+            if (cloudSpatialAnchor != null)
+            {
+                Debug.Log("CloudSpatialAnchor Found.");
+                SelectAnchor(cloudSpatialAnchor);
+                Debug.Log("CloudSpatialAnchor Selected.");
+                return;
+            }
+            if (isValidPositionPhyRaycast())
+            {
+                PlaceAnchor();
+                return;
+            }
+
         }
     }
-    
+
     private async void PlaceAnchor()
     {
-        if(isValidPositionPhyRaycast())
-        {
-            GameObject tempAnchor = Instantiate(new GameObject(), pose.position, pose.rotation);
-            CloudNativeAnchor cna = tempAnchor.AddComponent<CloudNativeAnchor>();
-            if(cna.CloudAnchor == null)
-            {
-                Debug.Log("Calling Native to Cloud");
-                cna.NativeToCloud();
-            }
-            Debug.Log($"CNA : {cna.enabled}");
-            CloudSpatialAnchor cloudAnchor = cna.CloudAnchor;
-            Debug.Log($"Cloud ID : {cloudAnchor.Identifier}");
-            Debug.Log($"AnchorConverter exists : {anchorConverter != null}");
-            await anchorConverter.CreateCloudAnchor(cloudAnchor);
-            Destroy(tempAnchor);
-        } 
-    }
-    private bool isValidPositionARRaycast()
-    {
-        bool result = false;
-        var rayOrigin = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-        List<ARRaycastHit> rayCastHits = new List<ARRaycastHit>();
-        aRRaycastManager.Raycast(rayOrigin, rayCastHits,TrackableType.Planes);
 
-        if(rayCastHits.Count > 0)
+        GameObject tempAnchor = Instantiate(new GameObject(), pose.position, pose.rotation);
+        GameObject anchorRender = Instantiate(anchorContainerRender,pose.position,pose.rotation);
+        anchorRender.transform.parent = tempAnchor.transform;
+        CloudNativeAnchor cna = tempAnchor.AddComponent<CloudNativeAnchor>();
+        if (cna.CloudAnchor == null)
         {
-            var cameraForward = Camera.main.transform.forward;
-            var cameraBearing = new Vector3(cameraForward.x,0,cameraForward.z).normalized;
-            result = true;
-            pose = rayCastHits[0].pose;
-            pose.rotation = Quaternion.LookRotation(cameraBearing);
+            Debug.Log("Calling Native to Cloud");
+            cna.NativeToCloud();
         }
-        return result;
+        Debug.Log($"CNA : {cna.enabled}");
+        CloudSpatialAnchor cloudAnchor = cna.CloudAnchor;
+        Debug.Log($"Cloud ID : {cloudAnchor.Identifier}");
+        Debug.Log($"AnchorConverter exists : {anchorConverter != null}");
+        await anchorConverter.CreateCloudAnchor(cloudAnchor);
+        Destroy(tempAnchor);
+        anchorConverter.FindAnchorsByLocation();
+
+
     }
-     private bool isValidPositionPhyRaycast()
+    private bool isValidPositionPhyRaycast()
     {
         bool result = false;
         int hitMask = 1 << LayerMask.NameToLayer("AR Planes");
         Debug.Log($"Layer returned : {hitMask}");
         var rayOrigin = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
         RaycastHit[] rayCastHits = new RaycastHit[10];
-        var physicsRayCastHits =  Physics.RaycastNonAlloc(rayOrigin,rayCastHits,Mathf.Infinity,hitMask);
+        var physicsRayCastHits = Physics.RaycastNonAlloc(rayOrigin, rayCastHits, Mathf.Infinity, hitMask);
 
-        if(rayCastHits[0].collider != null)
+        if (rayCastHits[0].collider != null)
         {
             var cameraForward = Camera.main.transform.forward;
-            var cameraBearing = new Vector3(cameraForward.x,0,cameraForward.z).normalized;
+            var cameraBearing = new Vector3(cameraForward.x, 0, cameraForward.z).normalized;
             result = true;
-            pose = new Pose(rayCastHits[0].point,Quaternion.LookRotation(cameraBearing));
+            pose = new Pose(rayCastHits[0].point, Quaternion.LookRotation(cameraBearing));
         }
         return result;
+    }
+    private CloudSpatialAnchor isValidAnchorPhyRaycast()
+    {
+        CloudSpatialAnchor cloudSpatialAnchor = null;
+        int hitMask = 1 << LayerMask.NameToLayer("AR Anchors");
+        Debug.Log($"Layer returned : {hitMask}");
+        var rayOrigin = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+        RaycastHit[] rayCastHits = new RaycastHit[10];
+        var physicsRayCastHits = Physics.RaycastNonAlloc(rayOrigin, rayCastHits, Mathf.Infinity, hitMask);
+
+        if (rayCastHits[0].collider != null)
+        {
+            Debug.Log($"raycasthit[0] collider hit : {rayCastHits[0].collider.gameObject.name}");
+            //FindObjectsOfType<CloudNativeAnchor>();
+            CloudNativeAnchor [] list = FindObjectsOfType<CloudNativeAnchor>();
+            Debug.Log($"The length of CloudNativeAnchor list : {list.Length}");
+            //var csaList = FindObjectsOfType(typeof(CloudSpatialAnchor));
+            //Debug.Log($"The length of CloudSpatialAnchor list : {csaList.Length}");
+            CloudNativeAnchor cna = rayCastHits[0].collider.gameObject.GetComponentInParent<CloudNativeAnchor>();
+            Debug.Log($"Cna exists in parent : {cna!=null}");
+            Debug.Log($"{cna.CloudAnchor.Identifier}");
+            cna.NativeToCloud();
+            cloudSpatialAnchor = cna.CloudAnchor;
+            Debug.Log($"cloudSpatialAnchor hit : {cloudSpatialAnchor.Identifier}");
+        }
+        return cloudSpatialAnchor;
+    }
+    private void SelectAnchor(CloudSpatialAnchor cloudSpatialAnchor)
+    {
+        Debug.Log($"{cloudSpatialAnchor.Identifier}");
+        anchorManager.SelectAnchor(cloudSpatialAnchor);
     }
 }

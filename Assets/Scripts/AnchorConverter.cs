@@ -10,25 +10,25 @@ using UnityEngine.XR.ARFoundation;
 public class AnchorConverter : MonoBehaviour
 {
 
+    [SerializeField]
+    private GameObject arAnchorContainerRender;
     private SpatialAnchorManager spatialAnchorManager;
+
+    private ARAnchorManager aRAnchorManager;
 
     private bool anchorManagerIsSetup = false;
 
+    private bool anchorFirstTimeFound = false;
+
     // Start is called before the first frame update
-    async void Start()
+    void Start()
     {
         spatialAnchorManager = GetComponent<SpatialAnchorManager>();
         ARSession aRSession = FindObjectOfType<ARSession>();
+        aRAnchorManager = FindObjectOfType<ARAnchorManager>();
         ARSession.stateChanged += AnchorConverter_SessionStateChange;
 
 
-    }
-
-    IEnumerator WaitForARSession()
-    {
-        Debug.Log("Waiting for SessionTracking");
-        yield return new WaitUntil(() => ARSession.state == ARSessionState.SessionTracking);
-        Debug.Log("Session state = tracking");
     }
 
     private async void AttemptSetup()
@@ -50,6 +50,8 @@ public class AnchorConverter : MonoBehaviour
         FindAnchorsByLocation();
     }
 
+
+
     private void AnchorConverter_SessionStateChange(ARSessionStateChangedEventArgs obj)
     {
         switch (obj.state)
@@ -65,8 +67,29 @@ public class AnchorConverter : MonoBehaviour
     private void AnchorConverter_AnchorLocated(object sender, AnchorLocatedEventArgs args)
     {
         Debug.Log($"Anchor Located : {args.Anchor.Identifier}");
-    }
 
+        ARAnchor[] arFoundationAnchors = FindObjectsOfType<ARAnchor>();
+        Debug.Log($"The length og arFoundationAnchors: {arFoundationAnchors.Length}");
+        foreach (ARAnchor anchor in arFoundationAnchors)
+        {
+            if(anchor.transform.position == args.Anchor.GetPose().position)
+            {
+                Debug.Log($"Trying to add anchor. {anchor.name}");
+                CloudNativeAnchor cna = anchor.gameObject.AddComponent<CloudNativeAnchor>();
+                 Debug.Log($"Assign CNA. {anchor.name}");
+                cna.CloudToNative(args.Anchor);
+                 Debug.Log($"CloudToNative. {anchor.name}");
+                GameObject anchorRender = Instantiate(arAnchorContainerRender,anchor.transform.position,anchor.transform.rotation);
+                  Debug.Log($"Instantiate Render. {anchor.name}");
+                anchorRender.transform.parent = anchor.transform;
+                  Debug.Log($"Assign Parent for Render. {anchor.name}");
+                break;
+            }
+        }
+        anchorFirstTimeFound = true;
+        Debug.Log($"Checking first AnchorFirstTimeFound :{anchorFirstTimeFound}");
+    }
+ 
     private void ConfigureSensors()
     {
         PlatformLocationProvider sensorProvider = new PlatformLocationProvider();
@@ -78,6 +101,15 @@ public class AnchorConverter : MonoBehaviour
     //method to find anchors based on geolocation + wifi
     public void FindAnchorsByLocation()
     {
+        Debug.Log("Getting ActiveWatchers");
+
+        if(anchorFirstTimeFound)
+        {
+
+            Debug.Log($"SpatialAnchorManager Session is about to Reset:{anchorFirstTimeFound}");
+             spatialAnchorManager.Session.Reset();
+             Debug.Log($"SpatialAnchorManager Reset Complete:{anchorFirstTimeFound}");
+        }
         Debug.Log("Finding Anchors By Location");
         //set a neardevicecriteria to look for anchors within 5 meters
         //can return max of 25 anchors to be searching for at once time here
@@ -86,7 +118,10 @@ public class AnchorConverter : MonoBehaviour
         nearDeviceCriteria.MaxResultCount = 35;
         AnchorLocateCriteria anchorLocateCriteria = new AnchorLocateCriteria();
         anchorLocateCriteria.NearDevice = nearDeviceCriteria;
+        Debug.Log($"Chen is about to crash ");
         spatialAnchorManager.Session.CreateWatcher(anchorLocateCriteria);
+        Debug.Log("Chen is crashing");
+
     }
 
     public bool CheckLocationPermissions()
@@ -95,7 +130,7 @@ public class AnchorConverter : MonoBehaviour
         #if UNITY_ANDROID
         permissionsGranted = AndroidRuntimePermissions.CheckPermission(UnityEngine.Android.Permission.FineLocation) == AndroidRuntimePermissions.Permission.Granted;
         #elif UNITY_IOS
-        CLAuthorizationStatus locationAuthorizationStatus = CocoaHelpersBridge.GetLocationAuthorizationStatus()
+        CLAuthorizationStatus locationAuthorizationStatus = CocoaHelpersBridge.GetLocationAuthorizationStatus();
         permissionsGranted =  (locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedAlways || locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedWhenInUse);
         #endif
         Debug.Log($"Location Permission : {permissionsGranted}");

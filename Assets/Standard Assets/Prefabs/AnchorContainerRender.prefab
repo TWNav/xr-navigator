@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1334783211305507680}
   - component: {fileID: 8009661050359096312}
-  m_Layer: 9
-  m_Name: AnchorContainerCurvedText
+  m_Layer: 11
+  m_Name: AnchorContainerRender
   m_TagString: AnchorContainer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,13 +59,13 @@ GameObject:
   - component: {fileID: 7942593393598428104}
   - component: {fileID: 3047601394882791043}
   - component: {fileID: 4892414266222775892}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: DiskCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4535432705027880140
 Transform:
   m_ObjectHideFlags: 0
@@ -156,7 +156,7 @@ GameObject:
   - component: {fileID: 7329064653409141880}
   - component: {fileID: 3832620447011171927}
   - component: {fileID: 8056854224859188800}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Anchor Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -471,7 +471,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 18407fd65d35043da806244d9edad8ed,
         type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18407fd65d35043da806244d9edad8ed, type: 3}
