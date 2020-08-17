@@ -7,17 +7,20 @@ using UnityEngine.XR.ARFoundation;
 
 public class DistanceDebug : MonoBehaviour
 {
-    AnchorManager anchorManager;
+    private AnchorManager anchorManager;
 
-    ARAnchorManager aRAnchorManager;
+    private ARAnchorManager aRAnchorManager;
+    private TMP_Text distanceText;
 
     // Start is called before the first frame update
     void Start()
     {
         anchorManager = FindObjectOfType<AnchorManager>();
         aRAnchorManager = FindObjectOfType<ARAnchorManager>();
+        distanceText = GetComponent<TMP_Text>();
     }
 
+    
     // Update is called once per frame
     void Update()
     {
@@ -29,12 +32,16 @@ public class DistanceDebug : MonoBehaviour
                 
                 if (anchorProperties.anchorID == anchorManager.currentCloudSpatialAnchor.Identifier)
                 {
-                    TMP_Text distanceText = GetComponent<TMP_Text>();
                     distanceText.text = System.Math.Round(Vector3.Distance(anchor.transform.position,Camera.main.transform.position) * 3.28084, 1) + " ft";
                     break;
                 }
+            
             }
             
+        }
+        else
+        {
+            distanceText.text = "No anchor selected";
         }
     }
 }

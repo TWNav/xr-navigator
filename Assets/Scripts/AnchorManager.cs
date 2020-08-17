@@ -34,7 +34,8 @@ public class AnchorManager : MonoBehaviour
 
     public void ClearCloudSpatialAnchorList()
     {
-
+        foundCloudSpatialAnchors.Clear();
+        currentCloudSpatialAnchor = null;
     }
     public void SelectAnchor(string anchorIdentifier)
     {
