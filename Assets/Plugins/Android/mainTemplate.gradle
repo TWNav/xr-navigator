@@ -18,6 +18,7 @@ dependencies {
     // Azure Spatial Anchors
     implementation ("com.microsoft.azure.spatialanchors:spatialanchors_ndk:[${azureSpatialAnchorsSdkVersion}]") {
         exclude group: 'com.google.ar'
+        exclude group: 'com.microsoft.appcenter'
     }
     natives "com.microsoft.azure.spatialanchors:spatialanchors_ndk:[${azureSpatialAnchorsSdkVersion}]"
 }
