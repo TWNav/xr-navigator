@@ -31,7 +31,7 @@ MonoBehaviour:
   UsePush: 1
   EnableFirebaseAnalytics: 0
   InitialLogLevel: 4
-  UpdateTrack: 0
+  UpdateTrack: 1
   CustomLogUrl:
     UrlName: Log
     UseCustomUrl: 0
