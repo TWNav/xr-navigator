@@ -18,22 +18,12 @@ public class ARTapHandler : MonoBehaviour
     private EventSystem eventSystem;
     private AnchorConverter anchorConverter;
     private AnchorManager anchorManager;
-    
-    private bool inputDidBegin
-    {
-        get
-        {
-            return Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began;
-        }
-    }
+    private GameObject objectToPlace;
+    public AppMode currentAppMode;
 
-    private bool inputNotTouchingUIElement
-    {
-        get
-        {
-            return eventSystem == null || !eventSystem.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
-        }
-    }
+    private AppController appController;
+    private bool inputTouchExists => Input.touchCount == 1;
+    private bool inputNotTouchingUIElement => eventSystem == null || !eventSystem.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
 
     // Start is called before the first frame update
     void Start()
@@ -43,37 +33,62 @@ public class ARTapHandler : MonoBehaviour
         aRAnchorManager = GetComponent<ARAnchorManager>();
         eventSystem = FindObjectOfType<EventSystem>();
         anchorManager = FindObjectOfType<AnchorManager>();
+        appController = FindObjectOfType<AppController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (inputDidBegin && inputNotTouchingUIElement)
+        currentAppMode = appController.appMode;
+        if (inputTouchExists && inputNotTouchingUIElement)
         {
-            GameObject selectedAnchor = isValidAnchorPhyRaycast();
-            if (selectedAnchor != null)
+            switch(currentAppMode)
             {
-                Log.debug("CloudSpatialAnchor Found.");
-                SelectAnchor(selectedAnchor);
-                Log.debug("CloudSpatialAnchor Selected.");
-                return;
+                case AppMode.Create : AttemptAnchorMovement();
+                                        break;
+                case AppMode.Select:  SelectAnchor();
+                                        break;
+                default : return;                                
             }
-            if (isValidPositionPhyRaycast())
-            {
-                PlaceAnchor();
-                return;
-            }
-
         }
     }
 
-    private async void PlaceAnchor()
+    private void AttemptAnchorMovement()
+    {
+        if (isValidPositionPhyRaycast())
+            {
+                PlaceOrMoveGameObject();
+                return;
+            }
+    }
+    private void SelectAnchor()
+    {
+        GameObject selectedAnchor = isValidAnchorPhyRaycast();
+        if (selectedAnchor != null)
+        {
+            Debug.Log("CloudSpatialAnchor Found.");
+            SelectAnchor(selectedAnchor);
+            Debug.Log("CloudSpatialAnchor Selected.");
+            appController.ShowAnchorOptions();
+            return;
+        }
+
+    }
+    private void PlaceOrMoveGameObject()
+    {
+        if (objectToPlace == null)
+        {
+            objectToPlace = Instantiate(new GameObject(), pose.position, pose.rotation);
+            GameObject anchorRender = Instantiate(anchorContainerRender, objectToPlace.transform.position, objectToPlace.transform.rotation);
+            anchorRender.transform.SetParent(objectToPlace.transform);
+        }
+        objectToPlace.transform.position = pose.position;
+        objectToPlace.transform.rotation = pose.rotation;
+    }
+    public async void PlaceAnchor()
     {
 
-        GameObject tempAnchor = Instantiate(new GameObject(), pose.position, pose.rotation);
-        GameObject anchorRender = Instantiate(anchorContainerRender,tempAnchor.transform.position,tempAnchor.transform.rotation);
-        anchorRender.transform.SetParent(tempAnchor.transform);
-        CloudNativeAnchor cna = tempAnchor.AddComponent<CloudNativeAnchor>();
+        CloudNativeAnchor cna = objectToPlace.AddComponent<CloudNativeAnchor>();
         if (cna.CloudAnchor == null)
         {
             Log.debug("Calling Native to Cloud");
@@ -81,10 +96,9 @@ public class ARTapHandler : MonoBehaviour
         }
         Log.debug($"CNA : {cna.enabled}");
         CloudSpatialAnchor cloudAnchor = cna.CloudAnchor;
-        Log.debug($"Cloud ID : {cloudAnchor.Identifier}");
         Log.debug($"AnchorConverter exists : {anchorConverter != null}");
         await anchorConverter.CreateCloudAnchor(cloudAnchor);
-        Destroy(tempAnchor);
+        Destroy(objectToPlace);
         anchorConverter.FindAnchorsByLocation();
 
 

@@ -20,7 +20,7 @@ public class AnchorManager : MonoBehaviour
     public async void DeleteCurrentAnchor()
     {
         Log.debug($"Try to Delete CloudSpatialAnchor: {currentCloudSpatialAnchor.Identifier} ");
-        await spatialAnchorManager.Session.DeleteAnchorAsync(currentCloudSpatialAnchor); 
+        await spatialAnchorManager.DeleteAnchorAsync(currentCloudSpatialAnchor); 
         Log.debug($"CloudSpatialAnchor is Deleted: {currentCloudSpatialAnchor.Identifier}");
         await anchorConverter.ResetSession();
         anchorConverter.FindAnchorsByLocation();
