@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2559790691296393700}
-  - component: {fileID: 2559790691296393701}
+  - component: {fileID: 9166420937761590057}
   m_Layer: 0
-  m_Name: AppCenter
+  m_Name: AppCenterShared
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2559790691296393701
+--- !u!114 &9166420937761590057
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,7 +40,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 2559790691296393698}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9a3a6a28c6a80a46adde9b4e01eeb93, type: 3}
+  m_Script: {fileID: 11500000, guid: 9697c96f876b74b4aa526027f9986ff3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Settings: {fileID: 11400000, guid: 8dba1d3bfba8c49f787db2964ab3ac11, type: 2}
