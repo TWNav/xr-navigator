@@ -7,6 +7,10 @@ using Microsoft.Azure.SpatialAnchors.Unity;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
+#if UNITY_ANDROID
+using UnityEngine.Android;
+#endif
+
 public class AnchorConverter : MonoBehaviour
 {
 
@@ -111,7 +115,7 @@ public class AnchorConverter : MonoBehaviour
         PlatformLocationProvider sensorProvider = new PlatformLocationProvider();
         spatialAnchorManager.Session.LocationProvider = sensorProvider;
         sensorProvider.Sensors.GeoLocationEnabled = CheckLocationPermissions();
-        sensorProvider.Start();
+        //sensorProvider.Start();
     }
 
     //method to find anchors based on geolocation + wifi
@@ -151,8 +155,9 @@ public class AnchorConverter : MonoBehaviour
         }
         anchorManager.ClearCloudSpatialAnchorList();
         Debug.Log($"-----SpatialAnchorManager Session is about to Reset:{anchorFirstTimeFound}");
-        spatialAnchorManager.Session.Stop();
+        spatialAnchorManager.StopSession();
         await spatialAnchorManager.ResetSessionAsync();
+        ConfigureSensors();
         await spatialAnchorManager.StartSessionAsync();
         Debug.Log($"-----SpatialAnchorManager Reset Complete:{anchorFirstTimeFound}");
     }
@@ -161,7 +166,7 @@ public class AnchorConverter : MonoBehaviour
     {
         bool permissionsGranted = false;
         #if UNITY_ANDROID
-        permissionsGranted = AndroidRuntimePermissions.CheckPermission(UnityEngine.Android.Permission.FineLocation) == AndroidRuntimePermissions.Permission.Granted;
+        permissionsGranted = Permission.HasUserAuthorizedPermission(Permission.FineLocation);
         #elif UNITY_IOS
         CLAuthorizationStatus locationAuthorizationStatus = CocoaHelpersBridge.GetLocationAuthorizationStatus();
         permissionsGranted =  (locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedAlways || locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedWhenInUse);
@@ -187,7 +192,7 @@ public class AnchorConverter : MonoBehaviour
         try 
         {
             Debug.Log("Trying to create cloud anchor");
-            await spatialAnchorManager.Session.CreateAnchorAsync(cloudAnchor);
+            await spatialAnchorManager.CreateAnchorAsync(cloudAnchor);
         }
         catch (Exception ex)
         {
