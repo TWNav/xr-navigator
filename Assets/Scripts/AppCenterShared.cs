@@ -6,13 +6,13 @@ public class AppCenterShared : MonoBehaviour
 {
     AppCenterBehavior appCenter = null;
     private void Start() {
-        Debug.Log("Should find AppCenterBehavior.");
+        Log.debug("Should find AppCenterBehavior.");
         
         appCenter = FindObjectOfType<AppCenterBehavior>();
         if (appCenter) {
-            Debug.Log("Did find AppCenterBehavior.");
+            Log.debug("Did find AppCenterBehavior.");
         } else {
-            Debug.Log("Did NOT find AppCenterBehavior.");
+            Log.debug("Did NOT find AppCenterBehavior.");
         }
     }
 

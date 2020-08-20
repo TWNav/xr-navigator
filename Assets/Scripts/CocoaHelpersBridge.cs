@@ -136,7 +136,7 @@ public class CocoaHelpersBridge : MonoBehaviour
     private static void DebugLog(string message) {
         var st = new StackTrace();
         var sf = st.GetFrame(1);
-        UnityEngine.Debug.Log($"D/{sf}->{message}");
+        Log.debug($"D/{sf}->{message}");
     }
     #endif
 }

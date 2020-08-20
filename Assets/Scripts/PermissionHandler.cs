@@ -27,7 +27,7 @@ public class PermissionHandler : MonoBehaviour
 
         for (int i = 0; i < permissions.Length; i++)
         {
-            DebugLog($"Requesting access to {permissions[i]}");
+            Log.debug($"Requesting access to {permissions[i]}");
             results[i] = AndroidRuntimePermissions.RequestPermission(permissions[i]);
         }
 
@@ -47,7 +47,7 @@ public class PermissionHandler : MonoBehaviour
         else
         {
             SwitchScene();
-            Debug.Log("Permissions Granted");
+            Log.debug("Permissions Granted");
         }
     }
 
@@ -113,18 +113,18 @@ public class PermissionHandler : MonoBehaviour
 
     private void CheckPermissions() {
         if (accessAuthorized) {
-            DebugLog("Authorized for access to system permissions");
+            Log.debug("Authorized for access to system permissions");
             SwitchScene();
         }
     }
     
     public void RequestPermissions() {
         SetDelegatesAndCallbacks();
-        DebugLog($"Location Permission {locationAuthorizationStatus}");
+        Log.debug($"Location Permission {locationAuthorizationStatus}");
         switch (locationAuthorizationStatus)
         {
             case CLAuthorizationStatus.NotDetermined:                
-                DebugLog("Requesting Permissions Location");
+                Log.debug("Requesting Permissions Location");
                 CocoaHelpersBridge.RequestAuthorizationStatusLocation();
                 return;
                 
@@ -135,13 +135,13 @@ public class PermissionHandler : MonoBehaviour
                 break;
         }
 
-        DebugLog("Requesting Permissions Camera");
+        Log.debug("Requesting Permissions Camera");
 
    
-        DebugLog($"Camera Permission {avAuthorizationStatus}");
+        Log.debug($"Camera Permission {avAuthorizationStatus}");
         switch (avAuthorizationStatus) {
             case AVAuthorizationStatus.NotDetermined:   
-              DebugLog("Requesting Permissions Camera");             
+              Log.debug("Requesting Permissions Camera");             
                 CocoaHelpersBridge.RequestAuthorizationStatusCamera();
                 return;
             case AVAuthorizationStatus.Denied:
@@ -154,7 +154,7 @@ public class PermissionHandler : MonoBehaviour
     }
     
     private void LocationCallback(CLAuthorizationStatus status) {
-        DebugLog($"Location Callback received {status}");
+        Log.debug($"Location Callback received {status}");
         RequestPermissions();
     } 
 
@@ -166,7 +166,7 @@ public class PermissionHandler : MonoBehaviour
     }
 
      public void AVCallback(AVAuthorizationStatus status) { 
-        DebugLog($"Camera Callback received {status}");
+        Log.debug($"Camera Callback received {status}");
         RequestPermissions();
      }
 
@@ -181,16 +181,11 @@ public class PermissionHandler : MonoBehaviour
 #endif
 
     private void ShowPermissionsNeededPanel() {
-        DebugLog("ShowPermissionsNeededPanel");
+        Log.debug("ShowPermissionsNeededPanel");
          settingsPanel.SetActive(true);      
     }
     private void SwitchScene()
     {
         SceneManager.LoadScene("TWNavigatorScene");
-    }
-
-
-    private static void DebugLog(string message) {
-        Debug.Log($"D/{message}");
     }
 }

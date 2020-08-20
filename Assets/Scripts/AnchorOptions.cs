@@ -11,7 +11,7 @@ public class AnchorOptions : MonoBehaviour
     }
     public void RenameAnchor()
     {
-        Debug.Log("Rename Function Not Implemented.");
+        Log.debug("Rename Function Not Implemented.");
     }
     public void DeleteAnchor()
     {
@@ -20,7 +20,7 @@ public class AnchorOptions : MonoBehaviour
     }
     public void SaveAnchor()
     {
-        Debug.Log("Save Function Not Implemented.");
+        Log.debug("Save Function Not Implemented.");
     }
 
 }

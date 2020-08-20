@@ -53,9 +53,9 @@ public class ARTapHandler : MonoBehaviour
             GameObject selectedAnchor = isValidAnchorPhyRaycast();
             if (selectedAnchor != null)
             {
-                Debug.Log("CloudSpatialAnchor Found.");
+                Log.debug("CloudSpatialAnchor Found.");
                 SelectAnchor(selectedAnchor);
-                Debug.Log("CloudSpatialAnchor Selected.");
+                Log.debug("CloudSpatialAnchor Selected.");
                 return;
             }
             if (isValidPositionPhyRaycast())
@@ -76,13 +76,13 @@ public class ARTapHandler : MonoBehaviour
         CloudNativeAnchor cna = tempAnchor.AddComponent<CloudNativeAnchor>();
         if (cna.CloudAnchor == null)
         {
-            Debug.Log("Calling Native to Cloud");
+            Log.debug("Calling Native to Cloud");
             cna.NativeToCloud();
         }
-        Debug.Log($"CNA : {cna.enabled}");
+        Log.debug($"CNA : {cna.enabled}");
         CloudSpatialAnchor cloudAnchor = cna.CloudAnchor;
-        Debug.Log($"Cloud ID : {cloudAnchor.Identifier}");
-        Debug.Log($"AnchorConverter exists : {anchorConverter != null}");
+        Log.debug($"Cloud ID : {cloudAnchor.Identifier}");
+        Log.debug($"AnchorConverter exists : {anchorConverter != null}");
         await anchorConverter.CreateCloudAnchor(cloudAnchor);
         Destroy(tempAnchor);
         anchorConverter.FindAnchorsByLocation();
@@ -93,7 +93,7 @@ public class ARTapHandler : MonoBehaviour
     {
         bool result = false;
         int hitMask = 1 << LayerMask.NameToLayer("AR Planes");
-        Debug.Log($"Layer returned : {hitMask}");
+        Log.debug($"Layer returned : {hitMask}");
         var rayOrigin = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
         RaycastHit[] rayCastHits = new RaycastHit[10];
         var physicsRayCastHits = Physics.RaycastNonAlloc(rayOrigin, rayCastHits, Mathf.Infinity, hitMask);
@@ -111,21 +111,21 @@ public class ARTapHandler : MonoBehaviour
     {
         GameObject selectedAnchor = null;
         int hitMask = 1 << LayerMask.NameToLayer("AR Anchors");
-        Debug.Log($"Layer returned : {hitMask}");
+        Log.debug($"Layer returned : {hitMask}");
         var rayOrigin = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
         RaycastHit[] rayCastHits = new RaycastHit[10];
         var physicsRayCastHits = Physics.RaycastNonAlloc(rayOrigin, rayCastHits, Mathf.Infinity, hitMask);
 
         if (rayCastHits[0].collider != null)
         {
-            Debug.Log($"raycasthit[0] collider hit : {rayCastHits[0].collider.gameObject.name}");
+            Log.debug($"raycasthit[0] collider hit : {rayCastHits[0].collider.gameObject.name}");
             selectedAnchor = rayCastHits[0].collider.gameObject.GetComponentInParent<AnchorProperties>().gameObject;
         }
         return selectedAnchor;
     }
     private void SelectAnchor(GameObject anchorToSelect)
     {
-        Debug.Log($"{anchorToSelect.GetComponent<AnchorProperties>().anchorID}");
+        Log.debug($"{anchorToSelect.GetComponent<AnchorProperties>().anchorID}");
         string anchorIdentifier = anchorToSelect.GetComponent<AnchorProperties>().anchorID;
         anchorManager.SelectAnchor(anchorIdentifier);
     }

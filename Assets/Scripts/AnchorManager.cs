@@ -19,16 +19,16 @@ public class AnchorManager : MonoBehaviour
     }
     public async void DeleteCurrentAnchor()
     {
-        Debug.Log($"Try to Delete CloudSpatialAnchor: {currentCloudSpatialAnchor.Identifier} ");
+        Log.debug($"Try to Delete CloudSpatialAnchor: {currentCloudSpatialAnchor.Identifier} ");
         await spatialAnchorManager.Session.DeleteAnchorAsync(currentCloudSpatialAnchor); 
-        Debug.Log($"CloudSpatialAnchor is Deleted: {currentCloudSpatialAnchor.Identifier}");
+        Log.debug($"CloudSpatialAnchor is Deleted: {currentCloudSpatialAnchor.Identifier}");
         await anchorConverter.ResetSession();
         anchorConverter.FindAnchorsByLocation();
     }
 
     public void AddCloudSpatialAnchor(CloudSpatialAnchor cloudSpatialAnchor)
     {
-        Debug.Log($"Adding {cloudSpatialAnchor.Identifier} to foundCloudSpatialAnchors");
+        Log.debug($"Adding {cloudSpatialAnchor.Identifier} to foundCloudSpatialAnchors");
         foundCloudSpatialAnchors.Add(cloudSpatialAnchor);
     }
 
@@ -43,7 +43,7 @@ public class AnchorManager : MonoBehaviour
         {
             if(csa.Identifier.Equals(anchorIdentifier))
             {
-                Debug.Log($"{csa.Identifier} is being selected");
+                Log.debug($"{csa.Identifier} is being selected");
                 currentCloudSpatialAnchor = csa;
                 break;
             }

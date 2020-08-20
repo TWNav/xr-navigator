@@ -58,7 +58,7 @@ public class AnchorLerper : MonoBehaviour
             lerpComplete = false;
         }
         else{
-            Debug.Log("Resetting currentLerpTime");
+            Log.debug("Resetting currentLerpTime");
             currentLerpTime = 0;
             if(!inAnchorContainer)
             {
@@ -73,7 +73,7 @@ public class AnchorLerper : MonoBehaviour
     {
         renderToLerp.GetComponentInChildren<RotateCircle>().enabled = false;
         Vector3 textRotation = renderToLerp.GetComponentInChildren<RotateCircle>().gameObject.transform.rotation.eulerAngles;
-        Debug.Log($"{textRotation}");
+        Log.debug($"{textRotation}");
         renderToLerp.GetComponentInChildren<RotateCircle>().gameObject.transform.rotation = Quaternion.Euler(textRotation.x, textRotation.y, 0f);
     }
 

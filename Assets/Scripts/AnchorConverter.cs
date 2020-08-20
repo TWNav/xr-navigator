@@ -72,11 +72,11 @@ public class AnchorConverter : MonoBehaviour
     {
         if(args.Status == LocateAnchorStatus.Located)
         {
-            Debug.Log($"Anchor Located : {args.Anchor.Identifier}");
+            Log.debug($"Anchor Located : {args.Anchor.Identifier}");
 
             if(args.Identifier == null || args.Anchor == null)
             {
-                Debug.Log("Anchor or Identifier is null");
+                Log.debug("Anchor or Identifier is null");
                 return;
             }
 
@@ -90,19 +90,19 @@ public class AnchorConverter : MonoBehaviour
                 }
                 if(anchor.transform.position == args.Anchor.GetPose().position)
                 {
-                    Debug.Log($"Trying to add anchor. {anchor.name}");
+                    Log.debug($"Trying to add anchor. {anchor.name}");
                     AnchorProperties anchorProperties = anchor.gameObject.GetComponent<AnchorProperties>();
                     anchorProperties.anchorID = args.Anchor.Identifier;
-                    Debug.Log($"AnchorID : {anchorProperties.anchorID}");
+                    Log.debug($"AnchorID : {anchorProperties.anchorID}");
                     GameObject anchorRender = Instantiate(arAnchorContainerRender,anchor.transform.position,anchor.transform.rotation);
-                    Debug.Log($"Instantiate Render. {anchor.name}");
+                    Log.debug($"Instantiate Render. {anchor.name}");
                     anchorRender.transform.SetParent(anchor.transform);
-                    Debug.Log($"Assign Parent for Render. {anchor.name}");
+                    Log.debug($"Assign Parent for Render. {anchor.name}");
                     break;
                 }
             }
             anchorFirstTimeFound = true;
-            Debug.Log($"Checking first AnchorFirstTimeFound :{anchorFirstTimeFound}");
+            Log.debug($"Checking first AnchorFirstTimeFound :{anchorFirstTimeFound}");
         }
     }
  
@@ -117,13 +117,13 @@ public class AnchorConverter : MonoBehaviour
     //method to find anchors based on geolocation + wifi
     public async void FindAnchorsByLocation()
     {
-        Debug.Log("Getting ActiveWatchers");
+        Log.debug("Getting ActiveWatchers");
 
         if(anchorFirstTimeFound)
         {
             await ResetSession();
         }
-        Debug.Log("Finding Anchors By Location");
+        Log.debug("Finding Anchors By Location");
         //set a neardevicecriteria to look for anchors within 5 meters
         //can return max of 25 anchors to be searching for at once time here
         NearDeviceCriteria nearDeviceCriteria = new NearDeviceCriteria();
@@ -131,9 +131,9 @@ public class AnchorConverter : MonoBehaviour
         nearDeviceCriteria.MaxResultCount = 35;
         AnchorLocateCriteria anchorLocateCriteria = new AnchorLocateCriteria();
         anchorLocateCriteria.NearDevice = nearDeviceCriteria;
-        Debug.Log($"Chen is about to crash ");
+        Log.debug($"Chen is about to crash ");
         spatialAnchorManager.Session.CreateWatcher(anchorLocateCriteria);
-        Debug.Log("Chen is crashing");
+        Log.debug("Chen is crashing");
 
     }
 
@@ -145,16 +145,16 @@ public class AnchorConverter : MonoBehaviour
             {
                 break;
             }
-            Debug.Log($"-----ARFoundation removing {anchor.trackableId}");
+            Log.debug($"-----ARFoundation removing {anchor.trackableId}");
             aRAnchorManager.RemoveAnchor(anchor);
-            Debug.Log("-----ARFoundation removed anchor ");
+            Log.debug("-----ARFoundation removed anchor ");
         }
         anchorManager.ClearCloudSpatialAnchorList();
-        Debug.Log($"-----SpatialAnchorManager Session is about to Reset:{anchorFirstTimeFound}");
+        Log.debug($"-----SpatialAnchorManager Session is about to Reset:{anchorFirstTimeFound}");
         spatialAnchorManager.Session.Stop();
         await spatialAnchorManager.ResetSessionAsync();
         await spatialAnchorManager.StartSessionAsync();
-        Debug.Log($"-----SpatialAnchorManager Reset Complete:{anchorFirstTimeFound}");
+        Log.debug($"-----SpatialAnchorManager Reset Complete:{anchorFirstTimeFound}");
     }
 
     public bool CheckLocationPermissions()
@@ -166,7 +166,7 @@ public class AnchorConverter : MonoBehaviour
         CLAuthorizationStatus locationAuthorizationStatus = CocoaHelpersBridge.GetLocationAuthorizationStatus();
         permissionsGranted =  (locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedAlways || locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedWhenInUse);
         #endif
-        Debug.Log($"Location Permission : {permissionsGranted}");
+        Log.debug($"Location Permission : {permissionsGranted}");
         return permissionsGranted;
     }
 
@@ -174,24 +174,24 @@ public class AnchorConverter : MonoBehaviour
     {
         if(cloudAnchor==null)
         {
-            Debug.Log("Cloud anchor is null");
+            Log.debug("Cloud anchor is null");
             return;
         }
         
         while (!spatialAnchorManager.IsReadyForCreate)
         {
-            Debug.Log($"Not enough environmental data : {spatialAnchorManager.SessionStatus.RecommendedForCreateProgress}");
+            Log.debug($"Not enough environmental data : {spatialAnchorManager.SessionStatus.RecommendedForCreateProgress}");
             await Task.Delay(333);
         }
 
         try 
         {
-            Debug.Log("Trying to create cloud anchor");
+            Log.debug("Trying to create cloud anchor");
             await spatialAnchorManager.Session.CreateAnchorAsync(cloudAnchor);
         }
         catch (Exception ex)
         {
-            Debug.Log(ex.Message);
+            Log.debug(ex.Message);
         }
     }
 

@@ -49,7 +49,7 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
         else
         {
             SwitchScene();
-            Debug.Log("Permissions Granted");
+            Log.debug("Permissions Granted");
         }
     }
 
@@ -193,6 +193,6 @@ public class TutorialSceneBackgroundScript : MonoBehaviour
 
 
     private static void DebugLog(string message) {
-        Debug.Log($"D/{message}");
+        Log.debug($"D/{message}");
     }
 }
