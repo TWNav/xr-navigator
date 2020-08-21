@@ -24,7 +24,13 @@ public class ARTapHandler : MonoBehaviour
     private AppController appController;
     private bool inputTouchExists => Input.touchCount == 1;
     private bool inputNotTouchingUIElement => eventSystem == null || !eventSystem.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+
+    private bool uiButtonTouchEventStarted => Input.touchCount > 0 && eventSystem.IsPointerOverGameObject(Input.GetTouch(0).fingerId) && Input.GetTouch(0).phase == TouchPhase.Began;
+
+    private bool stillInButtonTouch;
     public GameObject currentSelectedAnchor {get; set;}
+
+    private int frameCounter;
 
 
     // Start is called before the first frame update
@@ -42,7 +48,20 @@ public class ARTapHandler : MonoBehaviour
     void Update()
     {
         currentAppMode = appController.appMode;
-        if (inputTouchExists && inputNotTouchingUIElement)
+        if(frameCounter++ % 25 ==0 )
+        {
+            Log.debug($"touching button :{uiButtonTouchEventStarted}; stillInTouch : {stillInButtonTouch}");
+        }
+        
+        if(uiButtonTouchEventStarted || stillInButtonTouch)
+        {
+            stillInButtonTouch = true;
+            if(Input.touchCount == 0)
+            {
+                stillInButtonTouch = false;
+            }
+        }
+        if (inputTouchExists && inputNotTouchingUIElement && !stillInButtonTouch)
         {
             switch (currentAppMode)
             {

@@ -99,6 +99,7 @@ public class RenameAnchorHandler : MonoBehaviour
     {
         objectToRename.GetComponent<AnchorProperties>().anchorLabel = inputField.text;
         DeselectInputField();
+        inputField.text = "";
         isInputFinished = true;
 
     }
