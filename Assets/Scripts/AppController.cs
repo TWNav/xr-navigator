@@ -7,7 +7,8 @@ public enum AppMode
     Home,
     Create,
     Select,
-    Explore
+    Explore,
+    Edit
 }
 public class AppController : MonoBehaviour
 {
@@ -62,6 +63,10 @@ public class AppController : MonoBehaviour
     public void EnterExploreMode()
     {
         appMode = AppMode.Explore;
+    }
+     public void EnterEditMode()
+    {
+        appMode = AppMode.Edit;
     }
     public void ShowAnchorOptions()
     {

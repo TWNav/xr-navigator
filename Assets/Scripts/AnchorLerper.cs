@@ -6,15 +6,16 @@ using TMPro;
 public class AnchorLerper : MonoBehaviour
 {
 
+
     private Transform anchorContainerTransform;
     [SerializeField]
     private Transform cameraContainerTransform;
 
     private Transform currentRenderTransform;
 
-    public GameObject anchorToLerp;
+    private GameObject anchorToLerp;
 
-    public GameObject renderToLerp;
+    private GameObject renderToLerp;
     private Vector3 startingScale, targetScale;
     private Vector3 selectedAnchorOriginalScale;
 
@@ -78,10 +79,13 @@ public class AnchorLerper : MonoBehaviour
     }
 
 
-    public void SelectAnchor()
+    public void SelectAnchor(GameObject anchorToLerp)
     {
+        Debug.Log("Calling the lerp");
         if(inAnchorContainer && !(lerpingFromCameraToContainer || lerpingFromContainerToCamera))
         {
+            Debug.Log($"anchorToLerp is : {anchorToLerp.GetInstanceID()}");
+            renderToLerp = anchorToLerp.transform.GetChild(0).gameObject;
             anchorContainerTransform = anchorToLerp.transform;
             selectedAnchorOriginalScale = renderToLerp.transform.localScale;
 

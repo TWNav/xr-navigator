@@ -94,12 +94,19 @@ public class AnchorConverter : MonoBehaviour
                 }
                 if(anchor.transform.position == args.Anchor.GetPose().position)
                 {
-                    Log.debug($"Trying to add anchor. {anchor.name}");
+
+                    Debug.Log($"Trying to add anchor. {anchor.name}");
                     AnchorProperties anchorProperties = anchor.gameObject.GetComponent<AnchorProperties>();
-                    anchorProperties.anchorID = args.Anchor.Identifier;
-                    Log.debug($"AnchorID : {anchorProperties.anchorID}");
+                    
+                    Debug.Log($"AnchorID : {anchorProperties.anchorID}");
                     GameObject anchorRender = Instantiate(arAnchorContainerRender,anchor.transform.position,anchor.transform.rotation);
-                    Log.debug($"Instantiate Render. {anchor.name}");
+                    Debug.Log($"Instantiate Render. {anchor.name}");
+                    GetAnchorProperties(args.Anchor, anchorProperties);
+                    if(anchorProperties.anchorLabel != null && anchorProperties.anchorLabel.Length > 0)
+                    {
+                        anchorRender.GetComponentInChildren<TMPro.TMP_Text>().text = RenameAnchorHandler.LoopLabel(anchorProperties.anchorLabel);
+                    }
+
                     anchorRender.transform.SetParent(anchor.transform);
                     Log.debug($"Assign Parent for Render. {anchor.name}");
                     break;
@@ -115,7 +122,7 @@ public class AnchorConverter : MonoBehaviour
         PlatformLocationProvider sensorProvider = new PlatformLocationProvider();
         spatialAnchorManager.Session.LocationProvider = sensorProvider;
         sensorProvider.Sensors.GeoLocationEnabled = CheckLocationPermissions();
-        //sensorProvider.Start();
+        
     }
 
     //method to find anchors based on geolocation + wifi
@@ -135,10 +142,10 @@ public class AnchorConverter : MonoBehaviour
         nearDeviceCriteria.MaxResultCount = 35;
         AnchorLocateCriteria anchorLocateCriteria = new AnchorLocateCriteria();
         anchorLocateCriteria.NearDevice = nearDeviceCriteria;
-        Log.debug($"Chen is about to crash ");
+        Debug.Log($"Creating Watcher ");
         spatialAnchorManager.Session.CreateWatcher(anchorLocateCriteria);
-        Log.debug("Chen is crashing");
-
+        Debug.Log("Watcher is created");
+        anchorFirstTimeFound = true;
     }
 
     public async Task ResetSession()
@@ -175,8 +182,9 @@ public class AnchorConverter : MonoBehaviour
         return permissionsGranted;
     }
 
-    public async Task CreateCloudAnchor(CloudSpatialAnchor cloudAnchor)
+    public async Task CreateCloudAnchor(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
     {
+        UpdateAnchorProperties(cloudAnchor,anchorProperties);
         if(cloudAnchor==null)
         {
             Log.debug("Cloud anchor is null");
@@ -197,6 +205,19 @@ public class AnchorConverter : MonoBehaviour
         catch (Exception ex)
         {
             Log.debug(ex.Message);
+        }
+    }
+
+    private void UpdateAnchorProperties(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
+    {
+        cloudAnchor.AppProperties["anchorLabel"] = anchorProperties.anchorLabel;
+    }
+    private void GetAnchorProperties(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
+    {
+        anchorProperties.anchorID = cloudAnchor.Identifier;
+        if(cloudAnchor.AppProperties.ContainsKey("anchorLabel"))
+        {
+            anchorProperties.anchorLabel = cloudAnchor.AppProperties["anchorLabel"];
         }
     }
 

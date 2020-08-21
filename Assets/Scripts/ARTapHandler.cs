@@ -24,6 +24,8 @@ public class ARTapHandler : MonoBehaviour
     private AppController appController;
     private bool inputTouchExists => Input.touchCount == 1;
     private bool inputNotTouchingUIElement => eventSystem == null || !eventSystem.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+    public GameObject currentSelectedAnchor {get; set;}
+
 
     // Start is called before the first frame update
     void Start()
@@ -42,13 +44,15 @@ public class ARTapHandler : MonoBehaviour
         currentAppMode = appController.appMode;
         if (inputTouchExists && inputNotTouchingUIElement)
         {
-            switch(currentAppMode)
+            switch (currentAppMode)
             {
-                case AppMode.Create : AttemptAnchorMovement();
-                                        break;
-                case AppMode.Select:  SelectAnchor();
-                                        break;
-                default : return;                                
+                case AppMode.Create:
+                    AttemptAnchorMovement();
+                    break;
+                case AppMode.Select:
+                    SelectAnchor();
+                    break;
+                default: return;
             }
         }
     }
@@ -56,18 +60,21 @@ public class ARTapHandler : MonoBehaviour
     private void AttemptAnchorMovement()
     {
         if (isValidPositionPhyRaycast())
-            {
-                PlaceOrMoveGameObject();
-                return;
-            }
+        {
+            PlaceOrMoveGameObject();
+            return;
+        }
     }
     private void SelectAnchor()
     {
+       
         GameObject selectedAnchor = isValidAnchorPhyRaycast();
+         Debug.Log($"selectedAnchor is : {selectedAnchor.GetInstanceID()}");
         if (selectedAnchor != null)
         {
             Debug.Log("CloudSpatialAnchor Found.");
             SelectAnchor(selectedAnchor);
+            appController.EnterEditMode();
             Debug.Log("CloudSpatialAnchor Selected.");
             appController.ShowAnchorOptions();
             return;
@@ -79,11 +86,13 @@ public class ARTapHandler : MonoBehaviour
         if (objectToPlace == null)
         {
             objectToPlace = Instantiate(new GameObject(), pose.position, pose.rotation);
+            objectToPlace.AddComponent<AnchorProperties>();
             GameObject anchorRender = Instantiate(anchorContainerRender, objectToPlace.transform.position, objectToPlace.transform.rotation);
             anchorRender.transform.SetParent(objectToPlace.transform);
         }
         objectToPlace.transform.position = pose.position;
         objectToPlace.transform.rotation = pose.rotation;
+        currentSelectedAnchor = objectToPlace;
     }
     public async void PlaceAnchor()
     {
@@ -96,8 +105,8 @@ public class ARTapHandler : MonoBehaviour
         }
         Log.debug($"CNA : {cna.enabled}");
         CloudSpatialAnchor cloudAnchor = cna.CloudAnchor;
-        Log.debug($"AnchorConverter exists : {anchorConverter != null}");
-        await anchorConverter.CreateCloudAnchor(cloudAnchor);
+        Debug.Log($"AnchorConverter exists : {anchorConverter != null}");
+        await anchorConverter.CreateCloudAnchor(cloudAnchor,objectToPlace.GetComponent<AnchorProperties>());
         Destroy(objectToPlace);
         anchorConverter.FindAnchorsByLocation();
 
@@ -139,8 +148,14 @@ public class ARTapHandler : MonoBehaviour
     }
     private void SelectAnchor(GameObject anchorToSelect)
     {
-        Log.debug($"{anchorToSelect.GetComponent<AnchorProperties>().anchorID}");
+        if (anchorToSelect != null)
+        {
+             Debug.Log($"anchorToSelect is : {anchorToSelect.GetInstanceID()}");
+            currentSelectedAnchor = anchorToSelect;
+        }
+        Debug.Log($"{anchorToSelect.GetComponent<AnchorProperties>().anchorID}");
         string anchorIdentifier = anchorToSelect.GetComponent<AnchorProperties>().anchorID;
         anchorManager.SelectAnchor(anchorIdentifier);
+
     }
 }

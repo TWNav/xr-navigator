@@ -5,6 +5,8 @@ using UnityEngine;
 public class AnchorProperties : MonoBehaviour
 {
     public string anchorID;
+    public string anchorLabel;
+
 
     // Start is called before the first frame update
     void Start()
@@ -14,6 +16,11 @@ public class AnchorProperties : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        
+    }
+
+    public void UpdateLabel()
     {
         
     }

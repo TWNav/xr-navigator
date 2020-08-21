@@ -12,16 +12,23 @@ public class AnchorOptions : MonoBehaviour
     [SerializeField]
     private GameObject AnchorOptionsUIElement;
 
+    private AnchorLerper anchorLerper;
+    private RenameAnchorHandler renameAnchorHandler;
+
     
     void Start() {
         anchorManager = FindObjectOfType<AnchorManager>();
         aRTapHandler = FindObjectOfType<ARTapHandler>();
         appController = FindObjectOfType<AppController>();
+        anchorLerper = FindObjectOfType<AnchorLerper>();
+        renameAnchorHandler = FindObjectOfType<RenameAnchorHandler>();
         
     }
     public void RenameAnchor()
     {
-        Log.debug("Rename Function Not Implemented.");
+        anchorLerper.SelectAnchor(aRTapHandler.currentSelectedAnchor);
+        renameAnchorHandler.SetObjectToRename(aRTapHandler.currentSelectedAnchor);
+        renameAnchorHandler.SelectInputField();
     }
     public void DeleteAnchor()
     {
@@ -30,11 +37,14 @@ public class AnchorOptions : MonoBehaviour
     }
     public void SaveAnchor()
     {
-        Log.debug("We are placing an anchor in to the cloud.");
+        
+        anchorLerper.SubmitAnchor();
+        Debug.Log("We are placing an anchor in to the cloud.");
         aRTapHandler.PlaceAnchor();
         appController.appMode = AppMode.Select;
         AnchorList.SetActive(true);
-        AnchorOptionsUIElement.SetActive(false);        
+        AnchorOptionsUIElement.SetActive(false);
+
     }
 
 }
