@@ -30,6 +30,7 @@ public class AnchorManager : MonoBehaviour
             anchorInfoText.GetComponent<FadeText>().SetText($"Anchor creation canceled");
             return;
         }
+        anchorInfoText.text = $"Trying to delete anchor:\n{aRTapHandler.currentSelectedAnchor.GetComponent<AnchorProperties>().anchorLabel}%";
         Log.debug($"Try to Delete CloudSpatialAnchor: {currentCloudSpatialAnchor.Identifier} ");
         await spatialAnchorManager.DeleteAnchorAsync(currentCloudSpatialAnchor); 
         Log.debug($"CloudSpatialAnchor is Deleted: {currentCloudSpatialAnchor.Identifier}");

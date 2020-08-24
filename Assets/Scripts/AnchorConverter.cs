@@ -202,9 +202,11 @@ public class AnchorConverter : MonoBehaviour
             await Task.Delay(333);
         }
 
+
         try 
         {
             Log.debug("Trying to create cloud anchor");
+            anchorInfoText.text = $"Trying to create cloud anchor";
             await spatialAnchorManager.CreateAnchorAsync(cloudAnchor);
             anchorInfoText.GetComponent<FadeText>().SetText("Anchor created!");
         }
