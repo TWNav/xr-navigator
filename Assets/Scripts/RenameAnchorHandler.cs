@@ -53,6 +53,7 @@ public class RenameAnchorHandler : MonoBehaviour
             GenerateLabel();
         }
     }
+    
 
     public void GenerateLabel()
     {

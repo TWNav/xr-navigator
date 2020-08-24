@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UITopMenuController : MonoBehaviour
@@ -12,7 +13,8 @@ public class UITopMenuController : MonoBehaviour
     [SerializeField]
     private GameObject AnchorOptions;
 
-    private 
+    [SerializeField]
+    private TMP_Text anchorInfoText, distanceText;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,12 +33,15 @@ public class UITopMenuController : MonoBehaviour
         appController.appMode = AppMode.Select;
         AnchorList.SetActive(true);
         AnchorOptions.SetActive(false);
+        anchorInfoText.gameObject.SetActive(true);
+        distanceText.gameObject.SetActive(false);
     }
     public void ExploreButton()
     {
          appController.appMode = AppMode.Explore;
         AnchorList.SetActive(false);
         AnchorOptions.SetActive(false);
-        
+        anchorInfoText.gameObject.SetActive(false);
+        distanceText.gameObject.SetActive(true);
     } 
 }

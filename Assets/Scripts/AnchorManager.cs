@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using Microsoft.Azure.SpatialAnchors;
 using Microsoft.Azure.SpatialAnchors.Unity;
+using TMPro;
 
 public class AnchorManager : MonoBehaviour
 {
     public CloudSpatialAnchor currentCloudSpatialAnchor;
     private SpatialAnchorManager spatialAnchorManager;
     private AnchorConverter anchorConverter;
+    private ARTapHandler aRTapHandler;
+    [SerializeField]
+    private TMP_Text anchorInfoText;
 
     private List<CloudSpatialAnchor> foundCloudSpatialAnchors = new List<CloudSpatialAnchor>();
 
@@ -16,12 +20,14 @@ public class AnchorManager : MonoBehaviour
     {
         spatialAnchorManager = FindObjectOfType<SpatialAnchorManager>();
         anchorConverter = FindObjectOfType<AnchorConverter>();
+        aRTapHandler = FindObjectOfType<ARTapHandler>();
     }
     public async void DeleteCurrentAnchor()
     {
         Log.debug($"Try to Delete CloudSpatialAnchor: {currentCloudSpatialAnchor.Identifier} ");
         await spatialAnchorManager.DeleteAnchorAsync(currentCloudSpatialAnchor); 
         Log.debug($"CloudSpatialAnchor is Deleted: {currentCloudSpatialAnchor.Identifier}");
+        anchorInfoText.GetComponent<FadeText>().SetText($"Anchor deleted \nLabel: {aRTapHandler.currentSelectedAnchor.GetComponent<AnchorProperties>().anchorLabel}");
         await anchorConverter.ResetSession();
         anchorConverter.FindAnchorsByLocation();
     }

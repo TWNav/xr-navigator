@@ -6,6 +6,7 @@ using Microsoft.Azure.SpatialAnchors;
 using Microsoft.Azure.SpatialAnchors.Unity;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using TMPro;
 
 #if UNITY_ANDROID
 using UnityEngine.Android;
@@ -16,6 +17,8 @@ public class AnchorConverter : MonoBehaviour
 
     [SerializeField]
     private GameObject arAnchorContainerRender;
+    [SerializeField]
+    private TMP_Text anchorInfoText;
     private SpatialAnchorManager spatialAnchorManager;
 
     private ARAnchorManager aRAnchorManager;
@@ -191,9 +194,11 @@ public class AnchorConverter : MonoBehaviour
             return;
         }
         
+        anchorInfoText.GetComponent<FadeText>().ShowText();
         while (!spatialAnchorManager.IsReadyForCreate)
         {
             Log.debug($"Not enough environmental data : {spatialAnchorManager.SessionStatus.RecommendedForCreateProgress}");
+            anchorInfoText.text = $"Look around to gather more data: {(int)(spatialAnchorManager.SessionStatus.RecommendedForCreateProgress*100)}%";
             await Task.Delay(333);
         }
 
@@ -201,10 +206,12 @@ public class AnchorConverter : MonoBehaviour
         {
             Log.debug("Trying to create cloud anchor");
             await spatialAnchorManager.CreateAnchorAsync(cloudAnchor);
+            anchorInfoText.GetComponent<FadeText>().SetText("Anchor created!");
         }
         catch (Exception ex)
         {
             Log.debug(ex.Message);
+            anchorInfoText.GetComponent<FadeText>().SetText("Oops there was problem created anchor!");
         }
     }
 
