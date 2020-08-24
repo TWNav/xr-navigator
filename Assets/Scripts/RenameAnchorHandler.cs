@@ -38,7 +38,15 @@ public class RenameAnchorHandler : MonoBehaviour
         }
         if (inputField.text.Length == 0)
         {
-            circleMesh.text = "TEST   TEST    TEST   TEST";
+            if(objectToRename.GetComponent<AnchorProperties>().anchorLabel != null && 
+                    objectToRename.GetComponent<AnchorProperties>().anchorLabel.Length > 0)
+            {
+                circleMesh.text = LoopLabel(objectToRename.GetComponent<AnchorProperties>().anchorLabel);
+            }
+            else
+            {
+                circleMesh.text = LoopLabel("New Anchor");
+            }
         }
         else
         {
