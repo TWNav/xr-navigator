@@ -17,6 +17,10 @@ public class MenuButtonEventSystemHandler : MonoBehaviour
         for(int i = 0; i < menuButtonScripts.Length; i++)
         {
             menuButtons.Add(menuButtonScripts[i].gameObject);
+            if(menuButtonScripts[i].gameObject.name.Equals("Manage Button"))
+            {
+                lastSelectedMenuButton = menuButtonScripts[i].gameObject;
+            }
         }
         Log.debug($"Menu Buttons detected : {menuButtons.Count}");
     }

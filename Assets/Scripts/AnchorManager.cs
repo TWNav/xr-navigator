@@ -24,6 +24,12 @@ public class AnchorManager : MonoBehaviour
     }
     public async void DeleteCurrentAnchor()
     {
+        if(aRTapHandler.currentSelectedAnchor.Equals(aRTapHandler.objectToPlace))
+        {
+            Destroy(aRTapHandler.objectToPlace);
+            anchorInfoText.GetComponent<FadeText>().SetText($"Anchor creation canceled");
+            return;
+        }
         Log.debug($"Try to Delete CloudSpatialAnchor: {currentCloudSpatialAnchor.Identifier} ");
         await spatialAnchorManager.DeleteAnchorAsync(currentCloudSpatialAnchor); 
         Log.debug($"CloudSpatialAnchor is Deleted: {currentCloudSpatialAnchor.Identifier}");

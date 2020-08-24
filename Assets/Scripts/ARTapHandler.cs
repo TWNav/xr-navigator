@@ -18,7 +18,7 @@ public class ARTapHandler : MonoBehaviour
     private EventSystem eventSystem;
     private AnchorConverter anchorConverter;
     private AnchorManager anchorManager;
-    private GameObject objectToPlace;
+    public GameObject objectToPlace;
     public AppMode currentAppMode;
 
     private AppController appController;

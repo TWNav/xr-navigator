@@ -26,7 +26,7 @@ public class AppController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        appMode = AppMode.Home;
+        appMode = AppMode.Select;
         //appModeEventSender.onModeChange += ModeSwitch;
     }
 
