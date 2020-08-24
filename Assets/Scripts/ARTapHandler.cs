@@ -30,8 +30,6 @@ public class ARTapHandler : MonoBehaviour
     private bool stillInButtonTouch;
     public GameObject currentSelectedAnchor {get; set;}
 
-    private int frameCounter;
-
 
     // Start is called before the first frame update
     void Start()
@@ -48,10 +46,6 @@ public class ARTapHandler : MonoBehaviour
     void Update()
     {
         currentAppMode = appController.appMode;
-        if(frameCounter++ % 25 ==0 )
-        {
-            Log.debug($"touching button :{uiButtonTouchEventStarted}; stillInTouch : {stillInButtonTouch}");
-        }
         
         if(uiButtonTouchEventStarted || stillInButtonTouch)
         {

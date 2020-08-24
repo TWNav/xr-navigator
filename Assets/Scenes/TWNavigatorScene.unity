@@ -455,6 +455,7 @@ GameObject:
   - component: {fileID: 381998481}
   - component: {fileID: 381998480}
   - component: {fileID: 381998479}
+  - component: {fileID: 381998482}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -510,6 +511,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &381998482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 381998478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20863b21078bc4b8ca4191838f7f875f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lastSelectedMenuButton: {fileID: 0}
 --- !u!1 &435997026
 GameObject:
   m_ObjectHideFlags: 0
@@ -919,8 +933,8 @@ GameObject:
   - component: {fileID: 653038659}
   - component: {fileID: 653038663}
   - component: {fileID: 653038662}
-  - component: {fileID: 653038661}
   - component: {fileID: 653038660}
+  - component: {fileID: 653038661}
   m_Layer: 5
   m_Name: Manage Button
   m_TagString: Untagged
@@ -971,7 +985,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 653038658}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: a5f882cf657444228bfa2eb3d81b98e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -983,7 +997,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9921569, g: 0.9921569, b: 0.9921569, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -1320,7 +1334,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 49.4
+  m_fontSize: 72
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1522,7 +1536,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 49.4
+  m_fontSize: 72
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1718,8 +1732,8 @@ GameObject:
   - component: {fileID: 1202750857}
   - component: {fileID: 1202750861}
   - component: {fileID: 1202750860}
-  - component: {fileID: 1202750859}
   - component: {fileID: 1202750858}
+  - component: {fileID: 1202750859}
   m_Layer: 5
   m_Name: Explore Button
   m_TagString: Untagged
@@ -1770,7 +1784,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1202750856}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: a5f882cf657444228bfa2eb3d81b98e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -1936,7 +1950,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 60.95
+  m_fontSize: 72
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2971,7 +2985,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 60.95
+  m_fontSize: 72
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3059,10 +3073,10 @@ RectTransform:
   m_Father: {fileID: 2111741284}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.9}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -50}
-  m_SizeDelta: {x: 0, y: -100}
+  m_AnchorMin: {x: 0, y: 0.85}
+  m_AnchorMax: {x: 1, y: 0.95}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1596663337
 GameObject:
@@ -3374,7 +3388,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 60.95
+  m_fontSize: 72
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
