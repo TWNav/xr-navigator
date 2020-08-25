@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Microsoft.Azure.SpatialAnchors;
 using UnityEngine;
 
 public class AnchorProperties : MonoBehaviour
 {
     public string anchorID;
     public string anchorLabel;
+    public CloudSpatialAnchor cloudSpatialAnchor;
+    public GameObject button;
 
 
     // Start is called before the first frame update

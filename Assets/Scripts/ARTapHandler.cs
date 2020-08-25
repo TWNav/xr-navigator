@@ -63,7 +63,7 @@ public class ARTapHandler : MonoBehaviour
                     AttemptAnchorMovement();
                     break;
                 case AppMode.Select:
-                    SelectAnchor();
+                    SelectAnchorObjectByTouch();
                     break;
                 default: return;
             }
@@ -78,11 +78,11 @@ public class ARTapHandler : MonoBehaviour
             return;
         }
     }
-    private void SelectAnchor()
+    private void SelectAnchorObjectByTouch()
     {
        
         GameObject selectedAnchor = isValidAnchorPhyRaycast();
-         Debug.Log($"selectedAnchor is : {selectedAnchor.GetInstanceID()}");
+        Debug.Log($"selectedAnchor is : {selectedAnchor.GetInstanceID()}");
         if (selectedAnchor != null)
         {
             Debug.Log("CloudSpatialAnchor Found.");
@@ -159,11 +159,11 @@ public class ARTapHandler : MonoBehaviour
         }
         return selectedAnchor;
     }
-    private void SelectAnchor(GameObject anchorToSelect)
+    public void SelectAnchor(GameObject anchorToSelect)
     {
         if (anchorToSelect != null)
         {
-             Debug.Log($"anchorToSelect is : {anchorToSelect.GetInstanceID()}");
+            Debug.Log($"anchorToSelect is : {anchorToSelect.GetInstanceID()}");
             currentSelectedAnchor = anchorToSelect;
         }
         Debug.Log($"{anchorToSelect.GetComponent<AnchorProperties>().anchorID}");

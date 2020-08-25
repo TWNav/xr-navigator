@@ -111,6 +111,7 @@ public class AnchorConverter : MonoBehaviour
                     }
 
                     anchorRender.transform.SetParent(anchor.transform);
+                    FindObjectOfType<AnchorButtonPopulator>().AddAnchorToButtonList(anchorProperties);
                     Log.debug($"Assign Parent for Render. {anchor.name}");
                     break;
                 }
@@ -228,6 +229,7 @@ public class AnchorConverter : MonoBehaviour
         {
             anchorProperties.anchorLabel = cloudAnchor.AppProperties["anchorLabel"];
         }
+        anchorProperties.cloudSpatialAnchor = cloudAnchor;
     }
 
     // Update is called once per frame
