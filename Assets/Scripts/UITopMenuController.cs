@@ -15,6 +15,8 @@ public class UITopMenuController : MonoBehaviour
 
     [SerializeField]
     private GameObject addAnchorButton;
+    [SerializeField]
+    private GameObject navigationArrow;
 
     [SerializeField]
     private TMP_Text anchorInfoText, distanceText;
@@ -24,6 +26,9 @@ public class UITopMenuController : MonoBehaviour
         appController = FindObjectOfType<AppController>();
         AnchorList.SetActive(true);
         AnchorOptions.SetActive(false);
+        navigationArrow.SetActive(false);
+        distanceText.gameObject.SetActive(false);
+        anchorInfoText.gameObject.SetActive(true);
     }
 
     // Update is called once per frame
@@ -34,6 +39,7 @@ public class UITopMenuController : MonoBehaviour
     public void ManageButton()
     {
         appController.appMode = AppMode.Select;
+        navigationArrow.SetActive(false);
         AnchorList.SetActive(true);
         AnchorOptions.SetActive(false);
         anchorInfoText.gameObject.SetActive(true);
@@ -48,6 +54,7 @@ public class UITopMenuController : MonoBehaviour
     public void ExploreButton()
     {
         appController.appMode = AppMode.Explore;
+        navigationArrow.SetActive(true);
         AnchorList.SetActive(true);
         AnchorOptions.SetActive(false);
         anchorInfoText.gameObject.SetActive(false);

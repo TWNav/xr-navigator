@@ -17,7 +17,7 @@ public class AnchorButtonPopulator : MonoBehaviour
     [SerializeField]
     private GameObject addAnchorButton;
     [SerializeField]
-    private GameObject scrollBar;
+    private GameObject scrollBar = null;
     private GameObject canvas;
     private Rect canvasRect;
 
