@@ -24,6 +24,8 @@ public class AnchorLerper : MonoBehaviour
 
     private bool inAnchorContainer = true;
 
+    public bool hasAnchorSelected => !inAnchorContainer;
+
     private bool lerpingFromContainerToCamera = false;
     private bool lerpingFromCameraToContainer = false;
 
@@ -118,4 +120,5 @@ public class AnchorLerper : MonoBehaviour
             renderToLerp.GetComponentInChildren<RotateCircle>().enabled = true;
         }
     }
+
 }

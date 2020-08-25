@@ -14,6 +14,9 @@ public class UITopMenuController : MonoBehaviour
     private GameObject AnchorOptions;
 
     [SerializeField]
+    private GameObject addAnchorButton;
+
+    [SerializeField]
     private TMP_Text anchorInfoText, distanceText;
     // Start is called before the first frame update
     void Start()
@@ -35,13 +38,25 @@ public class UITopMenuController : MonoBehaviour
         AnchorOptions.SetActive(false);
         anchorInfoText.gameObject.SetActive(true);
         distanceText.gameObject.SetActive(false);
+        addAnchorButton.SetActive(true);
+        AnchorLerper anchorLerper = FindObjectOfType<AnchorLerper>();
+        if(anchorLerper.hasAnchorSelected)
+        {
+            anchorLerper.SubmitAnchor();
+        }
     }
     public void ExploreButton()
     {
-         appController.appMode = AppMode.Explore;
-        AnchorList.SetActive(false);
+        appController.appMode = AppMode.Explore;
+        AnchorList.SetActive(true);
         AnchorOptions.SetActive(false);
         anchorInfoText.gameObject.SetActive(false);
         distanceText.gameObject.SetActive(true);
+        addAnchorButton.SetActive(false);
+        AnchorLerper anchorLerper = FindObjectOfType<AnchorLerper>();
+        if(anchorLerper.hasAnchorSelected)
+        {
+            anchorLerper.SubmitAnchor();
+        }
     } 
 }
