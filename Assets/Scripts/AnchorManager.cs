@@ -8,6 +8,7 @@ using TMPro;
 public class AnchorManager : MonoBehaviour
 {
     public CloudSpatialAnchor currentCloudSpatialAnchor;
+    
     private SpatialAnchorManager spatialAnchorManager;
     private AnchorConverter anchorConverter;
     private ARTapHandler aRTapHandler;
@@ -16,16 +17,24 @@ public class AnchorManager : MonoBehaviour
 
     private List<CloudSpatialAnchor> foundCloudSpatialAnchors = new List<CloudSpatialAnchor>();
 
+    private AnchorLerper anchorLerper;
+
     void Start()
     {
         spatialAnchorManager = FindObjectOfType<SpatialAnchorManager>();
         anchorConverter = FindObjectOfType<AnchorConverter>();
         aRTapHandler = FindObjectOfType<ARTapHandler>();
+        anchorLerper = FindObjectOfType<AnchorLerper>();
     }
     public async void DeleteCurrentAnchor()
     {
         if(aRTapHandler.currentSelectedAnchor.Equals(aRTapHandler.objectToPlace))
         {
+            if(anchorLerper.hasAnchorSelected)
+            {
+                anchorLerper.PrepareToDelete();
+                
+            }
             Destroy(aRTapHandler.objectToPlace);
             anchorInfoText.GetComponent<FadeText>().SetText($"Anchor creation canceled");
             return;

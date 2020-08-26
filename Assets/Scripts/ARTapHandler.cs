@@ -11,7 +11,7 @@ public class ARTapHandler : MonoBehaviour
 {
     [SerializeField]
 
-    private GameObject anchorContainerRender;
+    private GameObject anchorContainerRenderDashedRing;
     private ARRaycastManager aRRaycastManager;
     private Pose pose;
     private ARAnchorManager aRAnchorManager;
@@ -22,13 +22,17 @@ public class ARTapHandler : MonoBehaviour
     public AppMode currentAppMode;
 
     private AppController appController;
+    private MaterialSwitcher materialSwitcher;
     private bool inputTouchExists => Input.touchCount == 1;
     private bool inputNotTouchingUIElement => eventSystem == null || !eventSystem.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
 
     private bool uiButtonTouchEventStarted => Input.touchCount > 0 && eventSystem.IsPointerOverGameObject(Input.GetTouch(0).fingerId) && Input.GetTouch(0).phase == TouchPhase.Began;
 
     private bool stillInButtonTouch;
-    public GameObject currentSelectedAnchor {get; set;}
+    [SerializeField]
+    private Material defaultAnchorMaterial, selectedAnchorMaterial, deleteAnchorMaterial;
+    public GameObject previousSelectedAnchor { get; set; }
+    public GameObject currentSelectedAnchor { get; set; }
 
 
     // Start is called before the first frame update
@@ -40,17 +44,18 @@ public class ARTapHandler : MonoBehaviour
         eventSystem = FindObjectOfType<EventSystem>();
         anchorManager = FindObjectOfType<AnchorManager>();
         appController = FindObjectOfType<AppController>();
+        materialSwitcher = FindObjectOfType<MaterialSwitcher>();
     }
 
     // Update is called once per frame
     void Update()
     {
         currentAppMode = appController.appMode;
-        
-        if(uiButtonTouchEventStarted || stillInButtonTouch)
+
+        if (uiButtonTouchEventStarted || stillInButtonTouch)
         {
             stillInButtonTouch = true;
-            if(Input.touchCount == 0)
+            if (Input.touchCount == 0)
             {
                 stillInButtonTouch = false;
             }
@@ -80,32 +85,35 @@ public class ARTapHandler : MonoBehaviour
     }
     private void SelectAnchorObjectByTouch()
     {
-       
+
         GameObject selectedAnchor = isValidAnchorPhyRaycast();
         Debug.Log($"selectedAnchor is : {selectedAnchor.GetInstanceID()}");
         if (selectedAnchor != null)
         {
             Debug.Log("CloudSpatialAnchor Found.");
             SelectAnchor(selectedAnchor);
+
             appController.EnterEditMode();
             Debug.Log("CloudSpatialAnchor Selected.");
             appController.ShowAnchorOptions();
             return;
         }
-
     }
+
     private void PlaceOrMoveGameObject()
     {
         if (objectToPlace == null)
         {
             objectToPlace = Instantiate(new GameObject(), pose.position, pose.rotation);
             objectToPlace.AddComponent<AnchorProperties>();
-            GameObject anchorRender = Instantiate(anchorContainerRender, objectToPlace.transform.position, objectToPlace.transform.rotation);
+            GameObject anchorRender = Instantiate(anchorContainerRenderDashedRing, objectToPlace.transform.position, objectToPlace.transform.rotation);
+
             anchorRender.transform.SetParent(objectToPlace.transform);
+
         }
         objectToPlace.transform.position = pose.position;
         objectToPlace.transform.rotation = pose.rotation;
-        currentSelectedAnchor = objectToPlace;
+        SwitchSelectedAnchor(objectToPlace);
     }
     public async void PlaceAnchor()
     {
@@ -119,7 +127,7 @@ public class ARTapHandler : MonoBehaviour
         Log.debug($"CNA : {cna.enabled}");
         CloudSpatialAnchor cloudAnchor = cna.CloudAnchor;
         Debug.Log($"AnchorConverter exists : {anchorConverter != null}");
-        await anchorConverter.CreateCloudAnchor(cloudAnchor,objectToPlace.GetComponent<AnchorProperties>());
+        await anchorConverter.CreateCloudAnchor(cloudAnchor, objectToPlace.GetComponent<AnchorProperties>());
         Destroy(objectToPlace);
         anchorConverter.FindAnchorsByLocation();
 
@@ -164,11 +172,58 @@ public class ARTapHandler : MonoBehaviour
         if (anchorToSelect != null)
         {
             Debug.Log($"anchorToSelect is : {anchorToSelect.GetInstanceID()}");
-            currentSelectedAnchor = anchorToSelect;
+            SwitchSelectedAnchor(anchorToSelect);
+            Debug.Log($"{anchorToSelect.GetComponent<AnchorProperties>().anchorID}");
+            string anchorIdentifier = anchorToSelect.GetComponent<AnchorProperties>().anchorID;
+            anchorManager.SelectAnchor(anchorIdentifier);
+
+
         }
-        Debug.Log($"{anchorToSelect.GetComponent<AnchorProperties>().anchorID}");
-        string anchorIdentifier = anchorToSelect.GetComponent<AnchorProperties>().anchorID;
-        anchorManager.SelectAnchor(anchorIdentifier);
+
+    }
+    private void SwitchSelectedAnchor(GameObject objectSelected)
+    {
+        Log.debug($"The objectSelected is {objectSelected.GetComponent<AnchorProperties>().anchorLabel}");
+        if (currentSelectedAnchor != null)
+        {
+            Log.debug($"The current Selected Anchor is {currentSelectedAnchor.GetComponent<AnchorProperties>().anchorLabel}");
+        }
+        if (currentSelectedAnchor != null && objectSelected == currentSelectedAnchor)
+        {
+            Log.debug("objectSelected Anchor is equal to currentSelected Anchor");
+            return;
+        }
+        else
+        {
+            if (previousSelectedAnchor != null)
+            {
+                Log.debug($"The previousSelectedAnchor is {previousSelectedAnchor.GetComponent<AnchorProperties>().anchorLabel}");
+            }
+            else
+            {
+                Log.debug("Previous Selected Anchor is null");
+            }
+            previousSelectedAnchor = currentSelectedAnchor;
+
+            if (currentSelectedAnchor != null)
+            {
+                Log.debug($"The currentSelectedAnchor after switch is {currentSelectedAnchor.GetComponent<AnchorProperties>().anchorLabel}");
+            }
+            else
+            {
+                Log.debug("Current Selected Anchor is null");
+            }
+            currentSelectedAnchor = objectSelected;
+            if (previousSelectedAnchor != null)
+            {
+                materialSwitcher.SwitchAnchorRenderMaterial(previousSelectedAnchor, defaultAnchorMaterial);
+                Log.debug("Previous Selected Anchor has changed to default material");
+            }
+
+
+            materialSwitcher.SwitchAnchorRenderMaterial(currentSelectedAnchor, selectedAnchorMaterial);
+            Log.debug("Current Selected Anchor has changed to selected material");
+        }
 
     }
 }

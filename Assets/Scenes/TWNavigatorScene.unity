@@ -729,7 +729,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.05, y: 0.2}
   m_AnchorMax: {x: 0.95, y: 0.8}
-  m_AnchoredPosition: {x: -64.8, y: 0}
+  m_AnchoredPosition: {x: -48.599766, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &435997028
@@ -746,7 +746,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Padding:
     m_Left: 10
-    m_Right: 0
+    m_Right: 10
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 3
@@ -1504,7 +1504,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 72
+  m_fontSize: 63.6
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1706,7 +1706,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 72
+  m_fontSize: 59.7
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2412,6 +2412,7 @@ GameObject:
   - component: {fileID: 1367712944}
   - component: {fileID: 1367712943}
   - component: {fileID: 1367712946}
+  - component: {fileID: 1367712947}
   m_Layer: 0
   m_Name: AR Session Origin
   m_TagString: Untagged
@@ -2501,10 +2502,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d1f49a4eba74801a04a001b8d2c08b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anchorContainerRender: {fileID: 3926804650924284942, guid: 8253413d767ed4071bbc30061fe49384,
+  anchorContainerRenderDashedRing: {fileID: 3926804650924284942, guid: fdb2539d52d5740fd9e2ec82702d39c9,
     type: 3}
   objectToPlace: {fileID: 0}
   currentAppMode: 0
+  defaultAnchorMaterial: {fileID: 2100000, guid: 768f61f1406a94a548d3ea4611c55a8f,
+    type: 2}
+  selectedAnchorMaterial: {fileID: 2100000, guid: 418fe23ade7284f5a9c5dfe13ccb6e38,
+    type: 2}
+  deleteAnchorMaterial: {fileID: 2100000, guid: fb4e58fd50b39496584f53a5728eec3b,
+    type: 2}
+  previousSelectedAnchor: {fileID: 0}
 --- !u!114 &1367712945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2531,6 +2539,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anchorInfoText: {fileID: 18425078}
+--- !u!114 &1367712947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367712938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8572aa88f4f9475497f2da5abfb2d44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1391435566
 GameObject:
   m_ObjectHideFlags: 0

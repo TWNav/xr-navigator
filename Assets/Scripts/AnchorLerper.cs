@@ -103,7 +103,13 @@ public class AnchorLerper : MonoBehaviour
             inAnchorContainer = false;
         }
     }
-
+    public void PrepareToDelete()
+    {
+        renderToLerp.transform.SetParent(anchorContainerTransform);
+        lerpingFromCameraToContainer = false;
+        lerpingFromContainerToCamera = false;
+        inAnchorContainer = true;
+    }
     public void SubmitAnchor()
     {
         if(!inAnchorContainer && !(lerpingFromCameraToContainer || lerpingFromContainerToCamera))

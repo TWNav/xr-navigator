@@ -33,6 +33,7 @@ public class AnchorOptions : MonoBehaviour
     public void DeleteAnchor()
     {
         anchorManager.DeleteCurrentAnchor();
+        appController.EnterSelectMode();
         appController.ShowAnchorList();
     }
     public void SaveAnchor()
@@ -41,7 +42,7 @@ public class AnchorOptions : MonoBehaviour
         anchorLerper.SubmitAnchor();
         Debug.Log("We are placing an anchor in to the cloud.");
         aRTapHandler.PlaceAnchor();
-        appController.appMode = AppMode.Select;
+        appController.EnterSelectMode();
         AnchorList.SetActive(true);
         AnchorOptionsUIElement.SetActive(false);
 
