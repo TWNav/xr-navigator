@@ -109,8 +109,8 @@ public class RenameAnchorHandler : MonoBehaviour
         if(inputField.text.Length > 0)
         {
             objectToRename.GetComponent<AnchorProperties>().anchorLabel = inputField.text;
-            circleMesh.text = LoopLabel(objectToRename.GetComponent<AnchorProperties>().anchorLabel);
         }
+        circleMesh.text = LoopLabel(objectToRename.GetComponent<AnchorProperties>().anchorLabel);
         DeselectInputField();
         inputField.text = "";
         isInputFinished = true;

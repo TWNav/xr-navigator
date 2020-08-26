@@ -5,10 +5,13 @@ using UnityEngine;
 
 public class FadeText : MonoBehaviour
 {
+    [SerializeField]
+    private TMP_Text textToFade;
+
     public void SetText(string message)
     {
         ShowText();
-        GetComponent<TMP_Text>().text = message;
+        textToFade.text = message;
         FadeOut();
     }
 
@@ -22,14 +25,14 @@ public class FadeText : MonoBehaviour
 
     public void ShowText()
     {
-        TMP_Text text = GetComponent<TMP_Text>();
+        TMP_Text text = textToFade;
         Color originalColor = text.color;
         originalColor.a = 1f;
         text.color = originalColor;
     }
     private IEnumerator FadeOutRoutine()
     {
-        TMP_Text text = GetComponent<TMP_Text>();
+        TMP_Text text = textToFade;
         Color originalColor = text.color;
         for (float t = 0.01f; t < (waitTime + fadeOutTime); t += Time.deltaTime)
         {

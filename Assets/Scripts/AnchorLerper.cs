@@ -125,6 +125,14 @@ public class AnchorLerper : MonoBehaviour
             inAnchorContainer = true;
             renderToLerp.GetComponentInChildren<RotateCircle>().enabled = true;
         }
+        else{
+            if(anchorToLerp == null)
+            {
+                renderToLerp = FindObjectOfType<ARTapHandler>().currentSelectedAnchor.transform.GetChild(0).gameObject;
+            }
+            renderToLerp.GetComponentInChildren<TMP_Text>().enabled = false;
+            renderToLerp.GetComponentInChildren<TMP_Text>().enabled = true;
+        }
     }
 
 }

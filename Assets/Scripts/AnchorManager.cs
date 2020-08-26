@@ -36,7 +36,7 @@ public class AnchorManager : MonoBehaviour
                 
             }
             Destroy(aRTapHandler.objectToPlace);
-            anchorInfoText.GetComponent<FadeText>().SetText($"Anchor creation canceled");
+            anchorInfoText.GetComponentInParent<FadeText>().SetText($"Anchor creation canceled");
             return;
         }
         AnchorProperties anchorToDeleteProperties = aRTapHandler.currentSelectedAnchor.GetComponent<AnchorProperties>();
@@ -44,7 +44,7 @@ public class AnchorManager : MonoBehaviour
         Log.debug($"Try to Delete CloudSpatialAnchor: {currentCloudSpatialAnchor.Identifier} ");
         await spatialAnchorManager.DeleteAnchorAsync(currentCloudSpatialAnchor); 
         Log.debug($"CloudSpatialAnchor is Deleted: {currentCloudSpatialAnchor.Identifier}");
-        anchorInfoText.GetComponent<FadeText>().SetText($"Anchor deleted \nLabel: {anchorToDeleteProperties.anchorLabel}");
+        anchorInfoText.GetComponentInParent<FadeText>().SetText($"Anchor deleted \nLabel: {anchorToDeleteProperties.anchorLabel}");
         Destroy(anchorToDeleteProperties.button);
         FindObjectOfType<AnchorButtonPopulator>().RemoveAnchorFromDictionary(anchorToDeleteProperties.anchorID);
         await anchorConverter.ResetSession();

@@ -6,7 +6,7 @@ using UnityEngine;
 public class AnchorProperties : MonoBehaviour
 {
     public string anchorID;
-    public string anchorLabel;
+    public string anchorLabel = "New Anchor";
     public CloudSpatialAnchor cloudSpatialAnchor;
     public GameObject button;
 

@@ -195,7 +195,7 @@ public class AnchorConverter : MonoBehaviour
             return;
         }
         
-        anchorInfoText.GetComponent<FadeText>().ShowText();
+        anchorInfoText.GetComponentInParent<FadeText>().ShowText();
         while (!spatialAnchorManager.IsReadyForCreate)
         {
             Log.debug($"Not enough environmental data : {spatialAnchorManager.SessionStatus.RecommendedForCreateProgress}");
@@ -209,12 +209,12 @@ public class AnchorConverter : MonoBehaviour
             Log.debug("Trying to create cloud anchor");
             anchorInfoText.text = $"Trying to create cloud anchor";
             await spatialAnchorManager.CreateAnchorAsync(cloudAnchor);
-            anchorInfoText.GetComponent<FadeText>().SetText("Anchor created!");
+            anchorInfoText.GetComponentInParent<FadeText>().SetText("Anchor created!");
         }
         catch (Exception ex)
         {
             Log.debug(ex.Message);
-            anchorInfoText.GetComponent<FadeText>().SetText("Oops there was problem created anchor!");
+            anchorInfoText.GetComponentInParent<FadeText>().SetText("Oops there was problem created anchor!");
         }
     }
 
