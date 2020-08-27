@@ -194,6 +194,9 @@ public class AnchorConverter : MonoBehaviour
             Log.debug("Cloud anchor is null");
             return;
         }
+
+        TutorialManager tutorialManager = FindObjectOfType<TutorialManager>();
+        tutorialManager.ShowScanEnvironmentAnimation();
         
         anchorInfoText.GetComponentInParent<FadeText>().ShowText();
         while (!spatialAnchorManager.IsReadyForCreate)
@@ -202,7 +205,7 @@ public class AnchorConverter : MonoBehaviour
             anchorInfoText.text = $"Look around to gather more data: {(int)(spatialAnchorManager.SessionStatus.RecommendedForCreateProgress*100)}%";
             await Task.Delay(333);
         }
-
+        tutorialManager.HideScanEnvironmentAnimation();
 
         try 
         {
