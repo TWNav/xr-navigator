@@ -8,6 +8,8 @@ public class TutorialManager : MonoBehaviour
     [SerializeField]
     [Tooltip("The ARCameraManager which will produce frame events.")]
     ARCameraManager m_CameraManager;
+    [SerializeField]
+    private GameObject tutorialAnimation;
 
     bool tutorialMode = true;
 
@@ -74,7 +76,7 @@ public class TutorialManager : MonoBehaviour
         if (PlanesFound() && m_ShowingMoveDevice)
         {
             if (moveDeviceAnimation)
-                moveDeviceAnimation.SetTrigger(k_FadeOffAnim);
+                tutorialAnimation.gameObject.SetActive(false);
 
             m_ShowingMoveDevice = false;
         }

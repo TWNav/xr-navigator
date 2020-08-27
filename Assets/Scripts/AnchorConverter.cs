@@ -28,6 +28,8 @@ public class AnchorConverter : MonoBehaviour
     private bool anchorManagerIsSetup = false;
 
     private bool anchorFirstTimeFound = false;
+    [SerializeField]
+    private GameObject tutorialManager;
 
     // Start is called before the first frame update
     void Start()
@@ -37,7 +39,7 @@ public class AnchorConverter : MonoBehaviour
         aRAnchorManager = FindObjectOfType<ARAnchorManager>();
         anchorManager = FindObjectOfType<AnchorManager>();
         ARSession.stateChanged += AnchorConverter_SessionStateChange;
-
+        tutorialManager.gameObject.SetActive(true);
 
     }
 
@@ -192,9 +194,7 @@ public class AnchorConverter : MonoBehaviour
             Log.debug("Cloud anchor is null");
             return;
         }
-
-        TutorialManager tutorialManager = FindObjectOfType<TutorialManager>();
-        tutorialManager.ShowScanEnvironmentAnimation();
+        tutorialManager.gameObject.SetActive(true);
 
         anchorInfoText.GetComponentInParent<FadeText>().ShowText();
         while (!spatialAnchorManager.IsReadyForCreate)
@@ -205,12 +205,13 @@ public class AnchorConverter : MonoBehaviour
             progressBar.GetComponent<Slider>().value = spatialAnchorManager.SessionStatus.RecommendedForCreateProgress;
             await Task.Delay(333);
         }
-        tutorialManager.HideScanEnvironmentAnimation();
+        tutorialManager.gameObject.SetActive(false);
 
         try
         {
             Log.debug("Trying to create cloud anchor");
             anchorInfoText.text = $"Trying to create cloud anchor";
+            progressBar.SetActive(false);
             await spatialAnchorManager.CreateAnchorAsync(cloudAnchor);
             anchorInfoText.GetComponentInParent<FadeText>().SetText("Anchor created!");
         }
