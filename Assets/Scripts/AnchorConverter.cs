@@ -7,6 +7,7 @@ using Microsoft.Azure.SpatialAnchors.Unity;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using TMPro;
+using UnityEngine.UI;
 
 #if UNITY_ANDROID
 using UnityEngine.Android;
@@ -19,15 +20,14 @@ public class AnchorConverter : MonoBehaviour
     private GameObject arAnchorContainerRender;
     [SerializeField]
     private TMP_Text anchorInfoText;
+    [SerializeField]
+    private GameObject progressBar;
     private SpatialAnchorManager spatialAnchorManager;
-
     private ARAnchorManager aRAnchorManager;
     private AnchorManager anchorManager;
     private bool anchorManagerIsSetup = false;
 
     private bool anchorFirstTimeFound = false;
-
-    
 
     // Start is called before the first frame update
     void Start()
@@ -43,7 +43,7 @@ public class AnchorConverter : MonoBehaviour
 
     private async void AttemptSetup()
     {
-        if(anchorManagerIsSetup)
+        if (anchorManagerIsSetup)
         {
             return;
         }
@@ -54,14 +54,12 @@ public class AnchorConverter : MonoBehaviour
             await spatialAnchorManager.CreateSessionAsync();
         }
         spatialAnchorManager.AnchorLocated += AnchorConverter_AnchorLocated;
-        
+
         await spatialAnchorManager.StartSessionAsync();
         ConfigureSensors();
         anchorManagerIsSetup = true;
         FindAnchorsByLocation();
     }
-
-
 
     private void AnchorConverter_SessionStateChange(ARSessionStateChangedEventArgs obj)
     {
@@ -77,11 +75,11 @@ public class AnchorConverter : MonoBehaviour
 
     private void AnchorConverter_AnchorLocated(object sender, AnchorLocatedEventArgs args)
     {
-        if(args.Status == LocateAnchorStatus.Located)
+        if (args.Status == LocateAnchorStatus.Located)
         {
             Log.debug($"Anchor Located : {args.Anchor.Identifier}");
 
-            if(args.Identifier == null || args.Anchor == null)
+            if (args.Identifier == null || args.Anchor == null)
             {
                 Log.debug("Anchor or Identifier is null");
                 return;
@@ -89,23 +87,23 @@ public class AnchorConverter : MonoBehaviour
 
             anchorManager.AddCloudSpatialAnchor(args.Anchor);
 
-            foreach(ARAnchor anchor in aRAnchorManager.trackables)
+            foreach (ARAnchor anchor in aRAnchorManager.trackables)
             {
-                if(anchor == null)
+                if (anchor == null)
                 {
                     break;
                 }
-                if(anchor.transform.position == args.Anchor.GetPose().position)
+                if (anchor.transform.position == args.Anchor.GetPose().position)
                 {
 
                     Debug.Log($"Trying to add anchor. {anchor.name}");
                     AnchorProperties anchorProperties = anchor.gameObject.GetComponent<AnchorProperties>();
-                    
+
                     Debug.Log($"AnchorID : {anchorProperties.anchorID}");
-                    GameObject anchorRender = Instantiate(arAnchorContainerRender,anchor.transform.position,anchor.transform.rotation);
+                    GameObject anchorRender = Instantiate(arAnchorContainerRender, anchor.transform.position, anchor.transform.rotation);
                     Debug.Log($"Instantiate Render. {anchor.name}");
                     GetAnchorProperties(args.Anchor, anchorProperties);
-                    if(anchorProperties.anchorLabel != null && anchorProperties.anchorLabel.Length > 0)
+                    if (anchorProperties.anchorLabel != null && anchorProperties.anchorLabel.Length > 0)
                     {
                         anchorRender.GetComponentInChildren<TMPro.TMP_Text>().text = RenameAnchorHandler.LoopLabel(anchorProperties.anchorLabel);
                     }
@@ -120,13 +118,13 @@ public class AnchorConverter : MonoBehaviour
             Log.debug($"Checking first AnchorFirstTimeFound :{anchorFirstTimeFound}");
         }
     }
- 
+
     private void ConfigureSensors()
     {
         PlatformLocationProvider sensorProvider = new PlatformLocationProvider();
         spatialAnchorManager.Session.LocationProvider = sensorProvider;
         sensorProvider.Sensors.GeoLocationEnabled = CheckLocationPermissions();
-        
+
     }
 
     //method to find anchors based on geolocation + wifi
@@ -134,7 +132,7 @@ public class AnchorConverter : MonoBehaviour
     {
         Log.debug("Getting ActiveWatchers");
 
-        if(anchorFirstTimeFound)
+        if (anchorFirstTimeFound)
         {
             await ResetSession();
         }
@@ -154,9 +152,9 @@ public class AnchorConverter : MonoBehaviour
 
     public async Task ResetSession()
     {
-        foreach(ARAnchor anchor in aRAnchorManager.trackables)
+        foreach (ARAnchor anchor in aRAnchorManager.trackables)
         {
-            if(anchor == null)
+            if (anchor == null)
             {
                 break;
             }
@@ -176,20 +174,20 @@ public class AnchorConverter : MonoBehaviour
     public bool CheckLocationPermissions()
     {
         bool permissionsGranted = false;
-        #if UNITY_ANDROID
+#if UNITY_ANDROID
         permissionsGranted = Permission.HasUserAuthorizedPermission(Permission.FineLocation);
-        #elif UNITY_IOS
+#elif UNITY_IOS
         CLAuthorizationStatus locationAuthorizationStatus = CocoaHelpersBridge.GetLocationAuthorizationStatus();
         permissionsGranted =  (locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedAlways || locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedWhenInUse);
-        #endif
+#endif
         Log.debug($"Location Permission : {permissionsGranted}");
         return permissionsGranted;
     }
 
     public async Task CreateCloudAnchor(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
     {
-        UpdateAnchorProperties(cloudAnchor,anchorProperties);
-        if(cloudAnchor==null)
+        UpdateAnchorProperties(cloudAnchor, anchorProperties);
+        if (cloudAnchor == null)
         {
             Log.debug("Cloud anchor is null");
             return;
@@ -197,17 +195,19 @@ public class AnchorConverter : MonoBehaviour
 
         TutorialManager tutorialManager = FindObjectOfType<TutorialManager>();
         tutorialManager.ShowScanEnvironmentAnimation();
-        
+
         anchorInfoText.GetComponentInParent<FadeText>().ShowText();
         while (!spatialAnchorManager.IsReadyForCreate)
         {
+            progressBar.SetActive(true);
             Log.debug($"Not enough environmental data : {spatialAnchorManager.SessionStatus.RecommendedForCreateProgress}");
-            anchorInfoText.text = $"Look around to gather more data: {(int)(spatialAnchorManager.SessionStatus.RecommendedForCreateProgress*100)}%";
+            anchorInfoText.text = $"Look around to gather more data:";
+            progressBar.GetComponent<Slider>().value = spatialAnchorManager.SessionStatus.RecommendedForCreateProgress;
             await Task.Delay(333);
         }
         tutorialManager.HideScanEnvironmentAnimation();
 
-        try 
+        try
         {
             Log.debug("Trying to create cloud anchor");
             anchorInfoText.text = $"Trying to create cloud anchor";
@@ -228,16 +228,10 @@ public class AnchorConverter : MonoBehaviour
     private void GetAnchorProperties(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
     {
         anchorProperties.anchorID = cloudAnchor.Identifier;
-        if(cloudAnchor.AppProperties.ContainsKey("anchorLabel"))
+        if (cloudAnchor.AppProperties.ContainsKey("anchorLabel"))
         {
             anchorProperties.anchorLabel = cloudAnchor.AppProperties["anchorLabel"];
         }
         anchorProperties.cloudSpatialAnchor = cloudAnchor;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
