@@ -15,6 +15,9 @@ public class AnchorOptions : MonoBehaviour
     private AnchorLerper anchorLerper;
     private RenameAnchorHandler renameAnchorHandler;
 
+    [SerializeField]
+    private GameObject DeleteConfirmPanel;
+
     
     void Start() {
         anchorManager = FindObjectOfType<AnchorManager>();
@@ -32,9 +35,7 @@ public class AnchorOptions : MonoBehaviour
     }
     public void DeleteAnchor()
     {
-        anchorManager.DeleteCurrentAnchor();
-        appController.EnterSelectMode();
-        appController.ShowAnchorList();
+        DeleteConfirmPanel.gameObject.SetActive(true);
     }
     public void SaveAnchor()
     {
@@ -46,6 +47,17 @@ public class AnchorOptions : MonoBehaviour
         AnchorList.SetActive(true);
         AnchorOptionsUIElement.SetActive(false);
 
+    }
+    public void ConfirmDeleteAnchor()
+    {
+        anchorManager.DeleteCurrentAnchor();
+        appController.EnterSelectMode();
+        appController.ShowAnchorList();
+        DeleteConfirmPanel.gameObject.SetActive(false);
+    }
+    public void CancelDeleteAnchor()
+    {
+        DeleteConfirmPanel.gameObject.SetActive(false);
     }
 
 }
