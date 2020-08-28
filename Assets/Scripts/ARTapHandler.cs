@@ -144,10 +144,10 @@ public class ARTapHandler : MonoBehaviour
 
         if (rayCastHits[0].collider != null)
         {
-            var cameraForward = Camera.main.transform.forward;
-            var cameraBearing = new Vector3(cameraForward.x, 0, cameraForward.z).normalized;
+            var planeRotation = rayCastHits[0].transform.rotation.eulerAngles;
             result = true;
-            pose = new Pose(rayCastHits[0].point, Quaternion.LookRotation(cameraBearing));
+            pose = new Pose(rayCastHits[0].point, Quaternion.Euler(planeRotation));
+            
         }
         return result;
     }
