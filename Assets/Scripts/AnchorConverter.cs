@@ -102,15 +102,16 @@ public class AnchorConverter : MonoBehaviour
                     AnchorProperties anchorProperties = anchor.gameObject.GetComponent<AnchorProperties>();
 
                     Debug.Log($"AnchorID : {anchorProperties.anchorID}");
-                    GameObject anchorRender = Instantiate(arAnchorContainerRender, anchor.transform.position, anchor.transform.rotation);
                     Debug.Log($"Instantiate Render. {anchor.name}");
                     GetAnchorProperties(args.Anchor, anchorProperties);
+                    GameObject anchorRender = Instantiate(arAnchorContainerRender, anchor.transform.position, anchor.transform.rotation);
                     if (anchorProperties.anchorLabel != null && anchorProperties.anchorLabel.Length > 0)
                     {
                         anchorRender.GetComponentInChildren<TMPro.TMP_Text>().text = RenameAnchorHandler.LoopLabel(anchorProperties.anchorLabel);
                     }
 
-                    anchorRender.transform.SetParent(anchor.transform);
+                    anchorRender.transform.SetParent(anchor.transform,false);
+                    Log.debug($" {anchorProperties.anchorLabel} 's anchorRender scale is :{anchorRender.gameObject.transform.localScale.x}, anchor scale is : {anchor.transform.localScale.x}");
                     FindObjectOfType<AnchorButtonPopulator>().AddAnchorToButtonList(anchorProperties);
                     Log.debug($"Assign Parent for Render. {anchor.name}");
                     break;
@@ -190,6 +191,8 @@ public class AnchorConverter : MonoBehaviour
 
     private void UpdateAnchorProperties(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
     {
+        Log.debug($"anchor properties local anchor local scale is : {anchorProperties.gameObject.transform.localScale.x.ToString()}");
+        cloudAnchor.AppProperties["scale"] = anchorProperties.gameObject.transform.localScale.x.ToString();
         if (anchorProperties.anchorLabel != null)
         {
             cloudAnchor.AppProperties["anchorLabel"] = anchorProperties.anchorLabel;
@@ -204,6 +207,14 @@ public class AnchorConverter : MonoBehaviour
             anchorProperties.anchorLabel = cloudAnchor.AppProperties["anchorLabel"];
         }
         anchorProperties.cloudSpatialAnchor = cloudAnchor;
+        if(cloudAnchor.AppProperties.ContainsKey("scale"))
+        {
+            float x = float.Parse(cloudAnchor.AppProperties["scale"]);
+            Log.debug($"anchor properties from cloud anchor local scale is : {float.Parse(cloudAnchor.AppProperties["scale"])}");
+            anchorProperties.gameObject.transform.localScale = new Vector3(1f,1f,1f) * x;
+            Log.debug($"anchor properties from cloud anchor  after local scale is : {anchorProperties.gameObject.transform.localScale}");
+        }
+       
     }
     public async Task CreateCloudAnchor(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
     {
