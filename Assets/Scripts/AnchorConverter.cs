@@ -104,7 +104,7 @@ public class AnchorConverter : MonoBehaviour
                     Debug.Log($"AnchorID : {anchorProperties.anchorID}");
                     Debug.Log($"Instantiate Render. {anchor.name}");
                     GetAnchorProperties(args.Anchor, anchorProperties);
-                    GameObject anchorRender = Instantiate(arAnchorContainerRender, anchor.transform.position, anchor.transform.rotation);
+                    GameObject anchorRender = Instantiate(arAnchorContainerRender, new Vector3(0f, 0f, 0f), Quaternion.Euler(0f,0f,0f));
                     if (anchorProperties.anchorLabel != null && anchorProperties.anchorLabel.Length > 0)
                     {
                         anchorRender.GetComponentInChildren<TMPro.TMP_Text>().text = RenameAnchorHandler.LoopLabel(anchorProperties.anchorLabel);
