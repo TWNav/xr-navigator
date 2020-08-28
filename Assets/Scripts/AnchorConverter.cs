@@ -171,6 +171,8 @@ public class AnchorConverter : MonoBehaviour
         ConfigureSensors();
         await spatialAnchorManager.StartSessionAsync();
         Log.debug($"-----SpatialAnchorManager Reset Complete:{anchorFirstTimeFound}");
+        Log.debug("Reset Anchor Lerper");
+        FindObjectOfType<AnchorLerper>().ResetLerper();
     }
 
     public bool CheckLocationPermissions()
@@ -180,12 +182,29 @@ public class AnchorConverter : MonoBehaviour
         permissionsGranted = Permission.HasUserAuthorizedPermission(Permission.FineLocation);
 #elif UNITY_IOS
         CLAuthorizationStatus locationAuthorizationStatus = CocoaHelpersBridge.GetLocationAuthorizationStatus();
-        permissionsGranted =  (locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedAlways || locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedWhenInUse);
+        permissionsGranted = (locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedAlways || locationAuthorizationStatus == CLAuthorizationStatus.AuthorizedWhenInUse);
 #endif
         Log.debug($"Location Permission : {permissionsGranted}");
         return permissionsGranted;
-    }
+    }  
 
+    private void UpdateAnchorProperties(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
+    {
+        if (anchorProperties.anchorLabel != null)
+        {
+            cloudAnchor.AppProperties["anchorLabel"] = anchorProperties.anchorLabel;
+        }
+
+    }
+    private void GetAnchorProperties(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
+    {
+        anchorProperties.anchorID = cloudAnchor.Identifier;
+        if (cloudAnchor.AppProperties.ContainsKey("anchorLabel"))
+        {
+            anchorProperties.anchorLabel = cloudAnchor.AppProperties["anchorLabel"];
+        }
+        anchorProperties.cloudSpatialAnchor = cloudAnchor;
+    }
     public async Task CreateCloudAnchor(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
     {
         UpdateAnchorProperties(cloudAnchor, anchorProperties);
@@ -221,18 +240,24 @@ public class AnchorConverter : MonoBehaviour
             anchorInfoText.GetComponentInParent<FadeText>().SetText("Oops there was problem created anchor!");
         }
     }
-
-    private void UpdateAnchorProperties(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
+    public async Task UpdateExistingAnchor(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
     {
-        cloudAnchor.AppProperties["anchorLabel"] = anchorProperties.anchorLabel;
-    }
-    private void GetAnchorProperties(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
-    {
-        anchorProperties.anchorID = cloudAnchor.Identifier;
-        if (cloudAnchor.AppProperties.ContainsKey("anchorLabel"))
+        UpdateAnchorProperties(cloudAnchor, anchorProperties);
+        try
         {
-            anchorProperties.anchorLabel = cloudAnchor.AppProperties["anchorLabel"];
+            Log.debug("Trying to update current cloudAnchor");
+            anchorInfoText.text = $"Trying to update cloud anchor";
+            //progressBar.SetActive(false);
+            await spatialAnchorManager.Session.UpdateAnchorPropertiesAsync(cloudAnchor);
+            anchorInfoText.GetComponentInParent<FadeText>().SetText("Anchor updated!");
         }
-        anchorProperties.cloudSpatialAnchor = cloudAnchor;
+        catch (Exception ex)
+        {
+            Log.debug(ex.Message);
+            anchorInfoText.GetComponentInParent<FadeText>().SetText("Oops there was problem updated anchor!");
+        }
+        FindAnchorsByLocation();
+
     }
+
 }

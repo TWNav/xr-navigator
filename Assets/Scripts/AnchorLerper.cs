@@ -134,5 +134,12 @@ public class AnchorLerper : MonoBehaviour
             renderToLerp.GetComponentInChildren<TMP_Text>().enabled = true;
         }
     }
+    public void ResetLerper()
+    {
+        currentLerpTime = 0;
+        inAnchorContainer = true;
+        lerpingFromCameraToContainer = false;
+        lerpingFromContainerToCamera = false;
+    }
 
 }

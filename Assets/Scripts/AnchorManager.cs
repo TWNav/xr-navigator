@@ -4,11 +4,12 @@ using UnityEngine;
 using Microsoft.Azure.SpatialAnchors;
 using Microsoft.Azure.SpatialAnchors.Unity;
 using TMPro;
+using System.Threading.Tasks;
 
 public class AnchorManager : MonoBehaviour
 {
     public CloudSpatialAnchor currentCloudSpatialAnchor;
-    
+
     private SpatialAnchorManager spatialAnchorManager;
     private AnchorConverter anchorConverter;
     private ARTapHandler aRTapHandler;
@@ -28,12 +29,12 @@ public class AnchorManager : MonoBehaviour
     }
     public async void DeleteCurrentAnchor()
     {
-        if(aRTapHandler.currentSelectedAnchor.Equals(aRTapHandler.objectToPlace))
+        if (aRTapHandler.currentSelectedAnchor.Equals(aRTapHandler.objectToPlace))
         {
-            if(anchorLerper.hasAnchorSelected)
+            if (anchorLerper.hasAnchorSelected)
             {
                 anchorLerper.PrepareToDelete();
-                
+
             }
             Destroy(aRTapHandler.objectToPlace);
             anchorInfoText.GetComponentInParent<FadeText>().SetText($"Anchor creation canceled");
@@ -42,7 +43,7 @@ public class AnchorManager : MonoBehaviour
         AnchorProperties anchorToDeleteProperties = aRTapHandler.currentSelectedAnchor.GetComponent<AnchorProperties>();
         anchorInfoText.text = $"Trying to delete anchor:\n{anchorToDeleteProperties.anchorLabel}%";
         Log.debug($"Try to Delete CloudSpatialAnchor: {currentCloudSpatialAnchor.Identifier} ");
-        await spatialAnchorManager.DeleteAnchorAsync(currentCloudSpatialAnchor); 
+        await spatialAnchorManager.DeleteAnchorAsync(currentCloudSpatialAnchor);
         Log.debug($"CloudSpatialAnchor is Deleted: {currentCloudSpatialAnchor.Identifier}");
         anchorInfoText.GetComponentInParent<FadeText>().SetText($"Anchor deleted \nLabel: {anchorToDeleteProperties.anchorLabel}");
         Destroy(anchorToDeleteProperties.button);
@@ -66,7 +67,7 @@ public class AnchorManager : MonoBehaviour
     {
         foreach (CloudSpatialAnchor csa in foundCloudSpatialAnchors)
         {
-            if(csa.Identifier.Equals(anchorIdentifier))
+            if (csa.Identifier.Equals(anchorIdentifier))
             {
                 Log.debug($"{csa.Identifier} is being selected");
                 currentCloudSpatialAnchor = csa;
@@ -74,4 +75,5 @@ public class AnchorManager : MonoBehaviour
             }
         }
     }
+    
 }

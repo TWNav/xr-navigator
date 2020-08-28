@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class AnchorOptions : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class AnchorOptions : MonoBehaviour
     [SerializeField]
     private GameObject DeleteConfirmPanel;
 
+    private AnchorConverter anchorConverter;
+
     
     void Start() {
         anchorManager = FindObjectOfType<AnchorManager>();
@@ -25,6 +28,8 @@ public class AnchorOptions : MonoBehaviour
         appController = FindObjectOfType<AppController>();
         anchorLerper = FindObjectOfType<AnchorLerper>();
         renameAnchorHandler = FindObjectOfType<RenameAnchorHandler>();
+
+        anchorConverter = FindObjectOfType<AnchorConverter>();
         
     }
     public void RenameAnchor()
@@ -37,12 +42,21 @@ public class AnchorOptions : MonoBehaviour
     {
         DeleteConfirmPanel.gameObject.SetActive(true);
     }
-    public void SaveAnchor()
+    public async void SaveAnchor()
     {
-        
         anchorLerper.SubmitAnchor();
         Debug.Log("We are placing an anchor in to the cloud.");
-        aRTapHandler.PlaceAnchor();
+        AnchorProperties anchorProperties = aRTapHandler.currentSelectedAnchor.GetComponent<AnchorProperties>();
+        if(anchorProperties.anchorID != null)
+        {
+            await anchorConverter.UpdateExistingAnchor(anchorProperties.cloudSpatialAnchor,anchorProperties);
+            Log.debug("Changing The Button Name");
+            anchorProperties.button.GetComponentInChildren<TMP_Text>().text = anchorProperties.anchorLabel;
+        }
+        else{
+            aRTapHandler.PlaceAnchor();
+        }
+        
         appController.EnterSelectMode();
         AnchorList.SetActive(true);
         AnchorOptionsUIElement.SetActive(false);
