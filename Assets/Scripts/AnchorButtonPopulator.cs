@@ -25,6 +25,8 @@ public class AnchorButtonPopulator : MonoBehaviour
 
     private float containerWidth, containerHeight;
 
+    private List<AnchorProperties> anchorPropertiesList = new List<AnchorProperties>();
+
 
     // Start is called before the first frame update
     void Start()
@@ -83,16 +85,34 @@ public class AnchorButtonPopulator : MonoBehaviour
         buttonToAdd.name = $"Anchor Button: {anchorProperties.anchorLabel}";
         buttonToAdd.GetComponentInChildren<TMP_Text>().text = anchorProperties.anchorLabel;
         buttonToAdd.GetComponent<RectTransform>().sizeDelta = new Vector2(containerWidth/(2.5f), containerHeight*(.8f));
-        buttonToAdd.transform.SetParent(contentContainer.transform);
-        buttonToAdd.transform.SetSiblingIndex(0);
+        buttonToAdd.transform.SetParent(contentContainer.transform);        
         anchorProperties.button = buttonToAdd;
         AnchorButtonHandler anchorButtonHandler = buttonToAdd.GetComponent<AnchorButtonHandler>();
         anchorButtonHandler.anchorProperties = anchorProperties;
         existingButtons.Add(anchorProperties.anchorID, buttonToAdd);
+        buttonToAdd.transform.SetSiblingIndex(0);
+        SortButtons();
         await Task.Delay(10);
         Canvas.ForceUpdateCanvases();
-        scrollBar.GetComponent<Scrollbar>().value = 1f;
+        scrollBar.GetComponent<Scrollbar>().value = 1f;   
     }
+
+    private void SortButtons()
+    {
+        try {
+            var buttons = contentContainer.GetComponentsInChildren<AnchorButtonHandler>();
+            Array.Sort(buttons, (bl, br) => {
+                return bl.anchorProperties.dateSeconds.CompareTo(br.anchorProperties.dateSeconds);
+            });
+            var idx = 0;
+            foreach(var button in buttons) {
+                button.gameObject.transform.SetSiblingIndex(idx++);
+            }
+        } catch(Exception err) {
+            Log.error($"Error Sortring array ${err}");
+        }
+    }
+
 
     private bool ButtonExists(AnchorProperties anchorProperties)
     {

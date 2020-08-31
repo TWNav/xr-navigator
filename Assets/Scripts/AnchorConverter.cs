@@ -192,22 +192,26 @@ public class AnchorConverter : MonoBehaviour
     private void UpdateAnchorProperties(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
     {
         Log.debug($"anchor properties local anchor local scale is : {anchorProperties.gameObject.transform.localScale.x.ToString()}");
-        cloudAnchor.AppProperties["scale"] = anchorProperties.gameObject.transform.localScale.x.ToString();
+        cloudAnchor.AppProperties[AnchorProperties.ScaleKey] = anchorProperties.gameObject.transform.localScale.x.ToString();
+        cloudAnchor.AppProperties[AnchorProperties.DateKey] = anchorProperties.date;
         if (anchorProperties.anchorLabel != null)
         {
-            cloudAnchor.AppProperties["anchorLabel"] = anchorProperties.anchorLabel;
+            cloudAnchor.AppProperties[AnchorProperties.AnchorLabelKey] = anchorProperties.anchorLabel;
         }
-
     }
     private void GetAnchorProperties(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
     {
         anchorProperties.anchorID = cloudAnchor.Identifier;
-        anchorProperties.anchorLabel = cloudAnchor.AppProperties.SafeGet("anchorLabel");
+
+        anchorProperties.anchorLabel = cloudAnchor.AppProperties.SafeGet(AnchorProperties.AnchorLabelKey);
+        anchorProperties.dateSecondsString = cloudAnchor.AppProperties.SafeGet(AnchorProperties.DateKey);
         anchorProperties.cloudSpatialAnchor = cloudAnchor;
-        if(cloudAnchor.AppProperties.ContainsKey("scale"))
+        
+        var scaleString = cloudAnchor.AppProperties.SafeGet(AnchorProperties.ScaleKey);
+        if(scaleString is string)
         {
-            float x = float.Parse(cloudAnchor.AppProperties["scale"]);
-            Log.debug($"anchor properties from cloud anchor local scale is : {float.Parse(cloudAnchor.AppProperties["scale"])}");
+            float x = float.Parse(scaleString);
+            Log.debug($"anchor properties from cloud anchor local scale is : {x}");
             anchorProperties.gameObject.transform.localScale = new Vector3(1f,1f,1f) * x;
             Log.debug($"anchor properties from cloud anchor  after local scale is : {anchorProperties.gameObject.transform.localScale}");
         }
@@ -215,6 +219,7 @@ public class AnchorConverter : MonoBehaviour
     }
     public async Task CreateCloudAnchor(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
     {
+        anchorProperties.dateSecondsString = $"{(Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds}";
         UpdateAnchorProperties(cloudAnchor, anchorProperties);
         if (cloudAnchor == null)
         {

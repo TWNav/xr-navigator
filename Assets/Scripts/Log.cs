@@ -22,7 +22,7 @@ public static class Log
     }
 
     private static void printMessage(string msg, LogLevel logLevel, string callerFile,  string callerMemberName, int lineNumber) {
-        Debug.Log($"{logLevel}/{ProcessFile(callerFile)}.{callerMemberName}#L{lineNumber} -> {msg}");
+        Debug.Log($"[TNA]{logLevel}/{ProcessFile(callerFile)}.{callerMemberName}#L{lineNumber} -> {msg}");
     }
 
     private static string ProcessFile(string file) {
