@@ -202,10 +202,7 @@ public class AnchorConverter : MonoBehaviour
     private void GetAnchorProperties(CloudSpatialAnchor cloudAnchor, AnchorProperties anchorProperties)
     {
         anchorProperties.anchorID = cloudAnchor.Identifier;
-        if (cloudAnchor.AppProperties.ContainsKey("anchorLabel"))
-        {
-            anchorProperties.anchorLabel = cloudAnchor.AppProperties["anchorLabel"];
-        }
+        anchorProperties.anchorLabel = cloudAnchor.AppProperties.SafeGet("anchorLabel");
         anchorProperties.cloudSpatialAnchor = cloudAnchor;
         if(cloudAnchor.AppProperties.ContainsKey("scale"))
         {
