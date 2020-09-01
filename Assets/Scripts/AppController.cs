@@ -30,7 +30,6 @@ public class AppController : MonoBehaviour
     void Start()
     {
         appMode = AppMode.Select;
-        appModeEventSender.onModeChange += ModeSwitch;
     }
 
     void ModeSwitch(AppMode mode)
