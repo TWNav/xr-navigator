@@ -107,10 +107,13 @@ public class ARTapHandler : MonoBehaviour
             objectToPlace = Instantiate(new GameObject(), pose.position, pose.rotation);
             objectToPlace.AddComponent<AnchorProperties>();
             GameObject anchorRender = Instantiate(anchorContainerRenderDashedRing, new Vector3(0,0,0), Quaternion.Euler(0f,0f,0f));
+            appController.EnterEditMode();
+            appController.ShowAnchorOptions();
 
             anchorRender.transform.SetParent(objectToPlace.transform, false);
-
+           
         }
+        
         objectToPlace.transform.position = pose.position;
         objectToPlace.transform.rotation = pose.rotation;
         SwitchSelectedAnchor(objectToPlace);

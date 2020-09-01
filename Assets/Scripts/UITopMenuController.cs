@@ -17,6 +17,7 @@ public class UITopMenuController : MonoBehaviour
     private GameObject addAnchorButton;
     [SerializeField]
     private GameObject navigationArrow;
+    private AnchorManager anchorManager;
 
     [SerializeField]
     private TMP_Text anchorInfoText, distanceText;
@@ -29,12 +30,16 @@ public class UITopMenuController : MonoBehaviour
         navigationArrow.SetActive(false);
         distanceText.gameObject.SetActive(false);
         anchorInfoText.gameObject.SetActive(true);
+        anchorManager = FindObjectOfType<AnchorManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(appController.appMode == AppMode.Explore && anchorManager.currentCloudSpatialAnchor != null)
+        {
+            navigationArrow.SetActive(true);
+        }
     }
     public void ManageButton()
     {
@@ -54,7 +59,6 @@ public class UITopMenuController : MonoBehaviour
     public void ExploreButton()
     {
         appController.appMode = AppMode.Explore;
-        navigationArrow.SetActive(true);
         AnchorList.SetActive(true);
         AnchorOptions.SetActive(false);
         anchorInfoText.gameObject.SetActive(false);

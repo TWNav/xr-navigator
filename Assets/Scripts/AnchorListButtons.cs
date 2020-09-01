@@ -9,11 +9,13 @@ public class AnchorListButtons : MonoBehaviour
     private GameObject AnchorList;
     [SerializeField]
     private GameObject AnchorOptions;
+    private ARTapHandler aRTapHandler;
 
     // Start is called before the first frame update
     void Start()
     {
         appController = FindObjectOfType<AppController>();
+        aRTapHandler = FindObjectOfType<ARTapHandler>();
     }
 
     // Update is called once per frame
@@ -25,6 +27,9 @@ public class AnchorListButtons : MonoBehaviour
     {
         appController.appMode = AppMode.Create;
         AnchorList.SetActive(false);
-        AnchorOptions.SetActive(true);
+        if(aRTapHandler.objectToPlace != null)
+        {
+            appController.ShowAnchorOptions();
+        }
     }
 }
