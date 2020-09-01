@@ -66,7 +66,7 @@ public class AppController : MonoBehaviour
     public void EnterCreateMode()
     {
         appMode = AppMode.Create;
-         exploreButton.GetComponent<Button>().interactable = true;
+        exploreButton.GetComponent<Button>().interactable = true;
     }
     public void EnterSelectMode()
     {

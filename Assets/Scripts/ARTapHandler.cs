@@ -21,6 +21,8 @@ public class ARTapHandler : MonoBehaviour
     public GameObject objectToPlace;
     public AppMode currentAppMode;
 
+    private AnchorLerper anchorLerper;
+
     private AppController appController;
     private MaterialSwitcher materialSwitcher;
     private bool inputTouchExists => Input.touchCount == 1;
@@ -45,6 +47,7 @@ public class ARTapHandler : MonoBehaviour
         anchorManager = FindObjectOfType<AnchorManager>();
         appController = FindObjectOfType<AppController>();
         materialSwitcher = FindObjectOfType<MaterialSwitcher>();
+        anchorLerper = FindObjectOfType<AnchorLerper>();
     }
 
     // Update is called once per frame
@@ -65,6 +68,9 @@ public class ARTapHandler : MonoBehaviour
             switch (currentAppMode)
             {
                 case AppMode.Create:
+                    AttemptAnchorMovement();
+                    break;
+                case AppMode.Edit:
                     AttemptAnchorMovement();
                     break;
                 case AppMode.Select:
@@ -113,7 +119,10 @@ public class ARTapHandler : MonoBehaviour
             anchorRender.transform.SetParent(objectToPlace.transform, false);
            
         }
-        
+        if(anchorLerper.hasAnchorSelected)
+        {
+            return;
+        }
         objectToPlace.transform.position = pose.position;
         objectToPlace.transform.rotation = pose.rotation;
         SwitchSelectedAnchor(objectToPlace);
