@@ -26,6 +26,8 @@ public class AnchorButtonPopulator : MonoBehaviour
     private float containerWidth, containerHeight;
 
     private List<AnchorProperties> anchorPropertiesList = new List<AnchorProperties>();
+    [SerializeField]
+    private HorizontalLayoutGroup horizontalLayoutGroup;
 
 
     // Start is called before the first frame update
@@ -39,6 +41,15 @@ public class AnchorButtonPopulator : MonoBehaviour
         Log.debug($"Height : {containerHeight},   Width : {containerWidth}");
         addAnchorButton.GetComponent<RectTransform>().sizeDelta = new Vector2(containerWidth/(2.5f), containerHeight*(.8f));
         scrollBar.GetComponent<Scrollbar>().value = 1f;
+        
+        int spacing = (int)(0.02 * bottomButtonContainer.GetComponent<RectTransform>().rect.width);
+        horizontalLayoutGroup.padding.left = spacing;
+        horizontalLayoutGroup.padding.right = spacing;
+        horizontalLayoutGroup.spacing = spacing;
+
+        
+        
+
     }
 
     // Update is called once per frame
