@@ -28,7 +28,7 @@ public class AnchorListButtons : MonoBehaviour
     }
     public void AddAnchor()
     {
-        appController.appMode = AppMode.Create;
+        appController.EnterCreateMode();
         AnchorList.SetActive(false);
         anchorsAwayPanel.SetActive(true);
         if(aRTapHandler.objectToPlace != null)
