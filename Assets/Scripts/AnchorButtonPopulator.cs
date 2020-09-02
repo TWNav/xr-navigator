@@ -94,7 +94,10 @@ public class AnchorButtonPopulator : MonoBehaviour
         Log.debug($"Button for {anchorProperties.name} does not exist");
         GameObject buttonToAdd = Instantiate(anchorButtonPrefab) as GameObject;
         buttonToAdd.name = $"Anchor Button: {anchorProperties.anchorLabel}";
-        buttonToAdd.GetComponentInChildren<TMP_Text>().text = anchorProperties.anchorLabel;
+        TMP_Text tmpText =  buttonToAdd.GetComponentInChildren<TMP_Text>();
+        tmpText.text = anchorProperties.anchorLabel;
+        tmpText.enableAutoSizing = false;
+        tmpText.fontSize = addAnchorButton.GetComponentInChildren<TMP_Text>().fontSize;
         buttonToAdd.GetComponent<RectTransform>().sizeDelta = new Vector2(containerWidth/(2.5f), containerHeight*(.8f));
         buttonToAdd.transform.SetParent(contentContainer.transform);        
         anchorProperties.button = buttonToAdd;

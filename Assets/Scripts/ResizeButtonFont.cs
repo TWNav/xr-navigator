@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Threading.Tasks;
 
 public class ResizeButtonFont : MonoBehaviour
 {
     [SerializeField]
     private GameObject topButtonContainer;
-    void Start()
+    async void Start()
     {
+        await Task.Delay(10);
+        Canvas.ForceUpdateCanvases(); 
         float smallestFontSizeInButtonWell = 1000f;
         float maxFontSizeInApp;
         var buttons = GetComponentsInChildren<Button>();
