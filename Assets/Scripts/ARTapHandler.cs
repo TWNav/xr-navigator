@@ -62,9 +62,9 @@ public class ARTapHandler : MonoBehaviour
         {
             attemptingRescale = false;
         }
-        if(firstInputJustBegan)
+        if(firstInputJustBegan && inputNotTouchingUIElement)
         {
-            timeWhenActiveAgain = Time.time + 0.2f;
+            timeWhenActiveAgain = Time.time + 0.05f;
         }
         if(Time.time < timeWhenActiveAgain)
         {
