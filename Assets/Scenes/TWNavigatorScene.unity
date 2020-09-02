@@ -1709,8 +1709,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.05, y: 0.2}
   m_AnchorMax: {x: 0.95, y: 0.8}
-  m_AnchoredPosition: {x: -55.89004, y: 0}
-  m_SizeDelta: {x: -636.02, y: -38.079994}
+  m_AnchoredPosition: {x: -51.57008, y: 0}
+  m_SizeDelta: {x: -558.2599, y: 54.8}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &435997028
 MonoBehaviour:
@@ -1761,6 +1761,7 @@ GameObject:
   m_Component:
   - component: {fileID: 449399785}
   - component: {fileID: 449399786}
+  - component: {fileID: 449399787}
   m_Layer: 5
   m_Name: New Anchor Options
   m_TagString: Untagged
@@ -1803,6 +1804,19 @@ MonoBehaviour:
   AnchorList: {fileID: 1495016265}
   AnchorOptionsUIElement: {fileID: 449399784}
   DeleteConfirmPanel: {fileID: 1170971970}
+--- !u!114 &449399787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449399784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b8320b2bd34c7f9c6569d80ce5553, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topButtonContainer: {fileID: 1681796570}
 --- !u!1 &563776827
 GameObject:
   m_ObjectHideFlags: 0
@@ -2210,8 +2224,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 72
-  m_fontSizeBase: 24
+  m_fontSize: 54.2
+  m_fontSizeBase: 0
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
@@ -2315,7 +2329,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.95, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2812,6 +2826,7 @@ GameObject:
   m_Component:
   - component: {fileID: 709519825}
   - component: {fileID: 709519826}
+  - component: {fileID: 709519827}
   m_Layer: 5
   m_Name: Existing Anchor Options
   m_TagString: Untagged
@@ -2854,6 +2869,19 @@ MonoBehaviour:
   AnchorList: {fileID: 1495016265}
   AnchorOptionsUIElement: {fileID: 709519824}
   DeleteConfirmPanel: {fileID: 1170971970}
+--- !u!114 &709519827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709519824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b8320b2bd34c7f9c6569d80ce5553, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topButtonContainer: {fileID: 1681796570}
 --- !u!1 &733702570
 GameObject:
   m_ObjectHideFlags: 0
@@ -3305,7 +3333,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 51.55
+  m_fontSize: 40.65
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3583,7 +3611,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 51.55
+  m_fontSize: 40.65
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4309,7 +4337,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 56.1
+  m_fontSize: 53.85
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4680,7 +4708,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 72
+  m_fontSize: 54.2
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5646,6 +5674,7 @@ GameObject:
   - component: {fileID: 1495016267}
   - component: {fileID: 1495016270}
   - component: {fileID: 1495016271}
+  - component: {fileID: 1495016272}
   m_Layer: 5
   m_Name: AnchorsList
   m_TagString: Untagged
@@ -5786,6 +5815,19 @@ MonoBehaviour:
   addAnchorButton: {fileID: 1364025005}
   scrollBar: {fileID: 1890286048}
   horizontalLayoutGroup: {fileID: 435997028}
+--- !u!114 &1495016272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1495016265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b8320b2bd34c7f9c6569d80ce5553, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topButtonContainer: {fileID: 0}
 --- !u!1 &1521694515
 GameObject:
   m_ObjectHideFlags: 0
@@ -5870,7 +5912,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 45.6
+  m_fontSize: 35.95
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6695,6 +6737,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1540211350}
   - component: {fileID: 1681796571}
+  - component: {fileID: 1681796572}
   m_Layer: 5
   m_Name: Top Button Container
   m_TagString: Untagged
@@ -6723,6 +6766,19 @@ MonoBehaviour:
   noAnchorDetectedPanel: {fileID: 1598257379}
   timeSpentWaiting: 0
   waitTime: 5
+--- !u!114 &1681796572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1681796570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b8320b2bd34c7f9c6569d80ce5553, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topButtonContainer: {fileID: 1681796570}
 --- !u!1 &1690894976
 GameObject:
   m_ObjectHideFlags: 0
@@ -7234,7 +7290,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 58.65
+  m_fontSize: 54.2
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7550,7 +7606,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 610227402}
   m_Direction: 1
   m_Value: 1
-  m_Size: 0.95
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7676,7 +7732,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 57.15
+  m_fontSize: 54.85
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
