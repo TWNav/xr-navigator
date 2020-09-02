@@ -20,16 +20,19 @@ public class AppController : MonoBehaviour
     private ARTapHandler aRTapHandler;
 
     [SerializeField]
-    private GameObject anchorOptions;
+    private GameObject existingAnchorOptions;
 
     [SerializeField]
     private GameObject anchorList;
     [SerializeField]
     private GameObject exploreButton;
+    [SerializeField]
+    private GameObject newAnchorOptions;
     // Start is called before the first frame update
     void Start()
     {
         appMode = AppMode.Select;
+        ShowAnchorList();
     }
 
     void ModeSwitch(AppMode mode)
@@ -87,14 +90,22 @@ public class AppController : MonoBehaviour
         appMode = AppMode.Edit;
         exploreButton.GetComponent<Button>().interactable = false;
     }
-    public void ShowAnchorOptions()
+    public void ShowExistingAnchorOptions()
     {
         anchorList.SetActive(false);
-        anchorOptions.SetActive(true);
+        existingAnchorOptions.SetActive(true);
+        newAnchorOptions.SetActive(false);
+    }
+    public void ShowNewAnchorOptions()
+    {
+        anchorList.SetActive(false);
+        newAnchorOptions.SetActive(true);
+        existingAnchorOptions.SetActive(false);
     }
     public void ShowAnchorList()
     {
         anchorList.SetActive(true);
-        anchorOptions.SetActive(false);
+        existingAnchorOptions.SetActive(false);
+        newAnchorOptions.SetActive(false);
     }
 }

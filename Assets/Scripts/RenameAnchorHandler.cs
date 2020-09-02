@@ -114,6 +114,7 @@ public class RenameAnchorHandler : MonoBehaviour
         DeselectInputField();
         inputField.text = "";
         isInputFinished = true;
+        FindObjectOfType<AnchorOptions>().SaveAnchor();
     }
     public void SetObjectToRename(GameObject anchorToRename)
     {

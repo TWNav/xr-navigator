@@ -33,7 +33,7 @@ public class AnchorListButtons : MonoBehaviour
         anchorsAwayPanel.SetActive(true);
         if(aRTapHandler.objectToPlace != null)
         {
-            appController.ShowAnchorOptions();
+            appController.ShowNewAnchorOptions();
         }
     }
 }

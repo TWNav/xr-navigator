@@ -26,7 +26,7 @@ public class AnchorButtonHandler : MonoBehaviour
         if(appController.appMode == AppMode.Select)
         {
             appController.EnterEditMode();
-            appController.ShowAnchorOptions();
+            appController.ShowExistingAnchorOptions();
         }
     }
 }

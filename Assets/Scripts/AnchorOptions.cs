@@ -73,5 +73,19 @@ public class AnchorOptions : MonoBehaviour
     {
         DeleteConfirmPanel.gameObject.SetActive(false);
     }
+    public void CancelAnchorEdit()
+    {
+        appController.EnterSelectMode();
+        appController.ShowAnchorList();
+        var scaleString = aRTapHandler.currentSelectedAnchor.GetComponent<AnchorProperties>().cloudSpatialAnchor.AppProperties.SafeGet(AnchorProperties.ScaleKey);
+        if(scaleString is string)
+        {
+            float x = float.Parse(scaleString);
+            Log.debug($"anchor properties from cloud anchor local scale is : {x}");
+            Log.debug($"Current Scale before Cancel Action :{aRTapHandler.currentSelectedAnchor.transform.localScale.x}");
+            aRTapHandler.currentSelectedAnchor.transform.localScale = new Vector3(1f,1f,1f) * x;
+            Log.debug($"Resetting Scale After Cancel Action to {x}");
+        }
+    }
 
 }

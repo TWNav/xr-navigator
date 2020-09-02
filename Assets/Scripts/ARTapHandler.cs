@@ -154,7 +154,7 @@ public class ARTapHandler : MonoBehaviour
 
             appController.EnterEditMode();
             Debug.Log("CloudSpatialAnchor Selected.");
-            appController.ShowAnchorOptions();
+            appController.ShowExistingAnchorOptions();
             return;
         }
     }
@@ -171,7 +171,7 @@ public class ARTapHandler : MonoBehaviour
             objectToPlace.AddComponent<AnchorProperties>();
             GameObject anchorRender = Instantiate(anchorContainerRenderDashedRing, new Vector3(0,0,0), Quaternion.Euler(0f,0f,0f));
             appController.EnterEditMode();
-            appController.ShowAnchorOptions();
+            appController.ShowNewAnchorOptions();
 
             anchorRender.transform.SetParent(objectToPlace.transform, false);
            
