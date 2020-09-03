@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum AppMode
 {
@@ -19,27 +20,41 @@ public class AppController : MonoBehaviour
     private ARTapHandler aRTapHandler;
 
     [SerializeField]
-    private GameObject anchorOptions;
+    private GameObject existingAnchorOptions;
 
     [SerializeField]
     private GameObject anchorList;
+    [SerializeField]
+    private GameObject exploreButton;
+    [SerializeField]
+    private GameObject newAnchorOptions;
     // Start is called before the first frame update
     void Start()
     {
         appMode = AppMode.Select;
-        //appModeEventSender.onModeChange += ModeSwitch;
+        ShowAnchorList();
     }
 
     void ModeSwitch(AppMode mode)
     {
         switch (mode)
         {
-            case AppMode.Home: break;
-            case AppMode.Create: 
+            case AppMode.Home:
+                exploreButton.GetComponent<Button>().interactable = true;
+                break;
+            case AppMode.Create:
+                exploreButton.GetComponent<Button>().interactable = true;
+                break;
+            case AppMode.Select:
+                exploreButton.GetComponent<Button>().interactable = true;
+                break;
+            case AppMode.Explore:
+                exploreButton.GetComponent<Button>().interactable = true; 
+                break;
+            case AppMode.Edit:
+                exploreButton.GetComponent<Button>().interactable = false;
+                break;
 
-                            break;
-            case AppMode.Select: break;
-            case AppMode.Explore: break;
             default:
                 break;
         }
@@ -50,32 +65,47 @@ public class AppController : MonoBehaviour
 
     }
 
-    public void EnterCreateMode() {
+    public void EnterCreateMode()
+    {
         appMode = AppMode.Create;
+        exploreButton.GetComponent<Button>().interactable = true;
     }
-    public void EnterSelectMode() {
+    public void EnterSelectMode()
+    {
         appMode = AppMode.Select;
+        exploreButton.GetComponent<Button>().interactable = true;
     }
     public void EnterHomeMode()
     {
         appMode = AppMode.Home;
+        exploreButton.GetComponent<Button>().interactable = true;
     }
     public void EnterExploreMode()
     {
         appMode = AppMode.Explore;
+        exploreButton.GetComponent<Button>().interactable = true;
     }
-     public void EnterEditMode()
+    public void EnterEditMode()
     {
         appMode = AppMode.Edit;
+        exploreButton.GetComponent<Button>().interactable = false;
     }
-    public void ShowAnchorOptions()
+    public void ShowExistingAnchorOptions()
     {
         anchorList.SetActive(false);
-        anchorOptions.SetActive(true);
+        existingAnchorOptions.SetActive(true);
+        newAnchorOptions.SetActive(false);
+    }
+    public void ShowNewAnchorOptions()
+    {
+        anchorList.SetActive(false);
+        newAnchorOptions.SetActive(true);
+        existingAnchorOptions.SetActive(false);
     }
     public void ShowAnchorList()
     {
         anchorList.SetActive(true);
-        anchorOptions.SetActive(false);
+        existingAnchorOptions.SetActive(false);
+        newAnchorOptions.SetActive(false);
     }
 }

@@ -10,7 +10,7 @@ public class AnchorProperties : MonoBehaviour, IComparable
     public static string DateKey = "date";
     public static string ScaleKey = "scale";
 
-    public string anchorID;
+    public string anchorID = null;
     public string anchorLabel = "New Anchor";
 
     public string dateSecondsString = "0";

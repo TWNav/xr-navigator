@@ -18,6 +18,7 @@ public class DistanceDebug : MonoBehaviour
         anchorManager = FindObjectOfType<AnchorManager>();
         aRAnchorManager = FindObjectOfType<ARAnchorManager>();
         distanceText = GetComponent<TMP_Text>();
+        distanceText.text = "";
     }
 
     
@@ -41,7 +42,7 @@ public class DistanceDebug : MonoBehaviour
         }
         else
         {
-            distanceText.text = "No anchor selected";
+            distanceText.text = "";
         }
     }
 }

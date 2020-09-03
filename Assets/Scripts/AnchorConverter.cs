@@ -193,7 +193,7 @@ public class AnchorConverter : MonoBehaviour
     {
         Log.debug($"anchor properties local anchor local scale is : {anchorProperties.gameObject.transform.localScale.x.ToString()}");
         cloudAnchor.AppProperties[AnchorProperties.ScaleKey] = anchorProperties.gameObject.transform.localScale.x.ToString();
-        cloudAnchor.AppProperties[AnchorProperties.DateKey] = anchorProperties.date;
+        cloudAnchor.AppProperties[AnchorProperties.DateKey] = anchorProperties.dateSecondsString;
         if (anchorProperties.anchorLabel != null)
         {
             cloudAnchor.AppProperties[AnchorProperties.AnchorLabelKey] = anchorProperties.anchorLabel;
@@ -242,7 +242,7 @@ public class AnchorConverter : MonoBehaviour
         try
         {
             Log.debug("Trying to create cloud anchor");
-            anchorInfoText.text = $"Trying to create cloud anchor";
+            anchorInfoText.text = $"Creating anchor...";
             progressBar.SetActive(false);
             await spatialAnchorManager.CreateAnchorAsync(cloudAnchor);
             anchorInfoText.GetComponentInParent<FadeText>().SetText("Anchor created!");

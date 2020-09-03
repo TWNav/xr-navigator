@@ -21,14 +21,19 @@ public class ARTapHandler : MonoBehaviour
     public GameObject objectToPlace;
     public AppMode currentAppMode;
 
+    private AnchorLerper anchorLerper;
+
     private AppController appController;
     private MaterialSwitcher materialSwitcher;
-    private bool inputTouchExists => Input.touchCount == 1;
+    private bool firstInputJustBegan => Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began;
+    private bool singleInput => Input.touchCount == 1;
     private bool inputNotTouchingUIElement => eventSystem == null || !eventSystem.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
 
     private bool uiButtonTouchEventStarted => Input.touchCount > 0 && eventSystem.IsPointerOverGameObject(Input.GetTouch(0).fingerId) && Input.GetTouch(0).phase == TouchPhase.Began;
 
     private bool stillInButtonTouch;
+    private bool attemptingRescale = false;
+    float timeWhenActiveAgain = 0f;
     [SerializeField]
     private Material defaultAnchorMaterial, selectedAnchorMaterial, deleteAnchorMaterial;
     public GameObject previousSelectedAnchor { get; set; }
@@ -45,12 +50,26 @@ public class ARTapHandler : MonoBehaviour
         anchorManager = FindObjectOfType<AnchorManager>();
         appController = FindObjectOfType<AppController>();
         materialSwitcher = FindObjectOfType<MaterialSwitcher>();
+        anchorLerper = FindObjectOfType<AnchorLerper>();
     }
 
     // Update is called once per frame
     void Update()
     {
         currentAppMode = appController.appMode;
+
+        if(Input.touchCount == 0)
+        {
+            attemptingRescale = false;
+        }
+        if(firstInputJustBegan && inputNotTouchingUIElement)
+        {
+            timeWhenActiveAgain = Time.time + 0.05f;
+        }
+        if(Time.time < timeWhenActiveAgain)
+        {
+            return;
+        }
 
         if (uiButtonTouchEventStarted || stillInButtonTouch)
         {
@@ -60,12 +79,15 @@ public class ARTapHandler : MonoBehaviour
                 stillInButtonTouch = false;
             }
         }
-        if (inputTouchExists && inputNotTouchingUIElement && !stillInButtonTouch)
+        if (singleInput && inputNotTouchingUIElement && !stillInButtonTouch && !attemptingRescale)
         {
             switch (currentAppMode)
             {
                 case AppMode.Create:
-                    AttemptAnchorMovement();
+                    AttemptAnchorPlaceOrMove();
+                    break;
+                case AppMode.Edit:
+                    AttemptAnchorPlaceOrMove();
                     break;
                 case AppMode.Select:
                     SelectAnchorObjectByTouch();
@@ -73,9 +95,46 @@ public class ARTapHandler : MonoBehaviour
                 default: return;
             }
         }
+        if(Input.touchCount == 2)
+        {
+            if(currentAppMode == AppMode.Edit)
+            {
+                attemptingRescale = true;
+                ScaleAnchor(currentSelectedAnchor);
+            }
+        }
     }
 
-    private void AttemptAnchorMovement()
+    public void ScaleAnchor(GameObject anchorToScale)
+    {  
+        Touch touchZero = Input.GetTouch(0);
+        Touch touchOne = Input.GetTouch(1);
+
+        Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+        Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+        float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
+        float previousMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+
+        float difference = currentMagnitude - previousMagnitude;
+
+        float deltaScale =  .001f * difference;
+        
+        Debug.Log(deltaScale);
+        float currentScale = anchorToScale.transform.localScale.x;
+        float newScale = currentScale + deltaScale;
+        if(newScale > 1.5f)
+        {
+            newScale = 1.5f;
+        }
+        else if (newScale < .25f)
+        {
+            newScale = .25f;
+        }
+        anchorToScale.transform.localScale = new Vector3(1f ,1f, 1f) * newScale;
+    }
+
+    private void AttemptAnchorPlaceOrMove()
     {
         if (isValidPositionPhyRaycast())
         {
@@ -95,21 +154,31 @@ public class ARTapHandler : MonoBehaviour
 
             appController.EnterEditMode();
             Debug.Log("CloudSpatialAnchor Selected.");
-            appController.ShowAnchorOptions();
+            appController.ShowExistingAnchorOptions();
             return;
         }
     }
 
     private void PlaceOrMoveGameObject()
-    {
+    {   
         if (objectToPlace == null)
         {
+            if(currentAppMode == AppMode.Edit)
+            {
+                return;
+            }
             objectToPlace = Instantiate(new GameObject(), pose.position, pose.rotation);
             objectToPlace.AddComponent<AnchorProperties>();
             GameObject anchorRender = Instantiate(anchorContainerRenderDashedRing, new Vector3(0,0,0), Quaternion.Euler(0f,0f,0f));
+            appController.EnterEditMode();
+            appController.ShowNewAnchorOptions();
 
             anchorRender.transform.SetParent(objectToPlace.transform, false);
-
+           
+        }
+        if(anchorLerper.hasAnchorSelected)
+        {
+            return;
         }
         objectToPlace.transform.position = pose.position;
         objectToPlace.transform.rotation = pose.rotation;

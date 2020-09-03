@@ -78,6 +78,12 @@ public class MenuButton : UnityEngine.UI.Button
         }
     }
 
+    public void ClickButton()
+    {
+        DoStateTransition(SelectionState.Selected, true);
+        EventSystem.current.SetSelectedGameObject(this.gameObject);
+    }
+
     private void ColorTween(Color targetColor)
     {
         if (this.targetGraphic == null)
