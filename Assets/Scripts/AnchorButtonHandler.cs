@@ -11,6 +11,7 @@ public class AnchorButtonHandler : MonoBehaviour
     void Start()
     {
         appController = FindObjectOfType<AppController>();
+    
     }
 
     // Update is called once per frame

@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 4384703941093061327}
   - component: {fileID: 2447008578586044344}
   - component: {fileID: 1195111136347121384}
-  - component: {fileID: 1173063635607352126}
   - component: {fileID: 2945647633468467794}
   - component: {fileID: 4424088206453723580}
+  - component: {fileID: 4317415885142722419}
   m_Layer: 5
   m_Name: Anchor Button
   m_TagString: Untagged
@@ -78,7 +78,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 4.69
---- !u!114 &1173063635607352126
+--- !u!114 &2945647633468467794
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,7 +87,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 1386128671839032950}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 0fddc6eb3c1154312ba0ee4316709201, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchorProperties: {fileID: 0}
+--- !u!114 &4424088206453723580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386128671839032950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeacfdb8e4ed5436dad209a46e5afc0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultColor: {fileID: 2100000, guid: 9aad9ef75cc9e469c99cad944853f4bf, type: 2}
+  highlightColor: {fileID: 2100000, guid: 59173b4edbe504be2872e7e695ac0a13, type: 2}
+--- !u!114 &4317415885142722419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386128671839032950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b03bdbd6ed1df4fdc97ae2beaf973e19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -132,33 +159,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &2945647633468467794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1386128671839032950}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fddc6eb3c1154312ba0ee4316709201, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  anchorProperties: {fileID: 0}
---- !u!114 &4424088206453723580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1386128671839032950}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeacfdb8e4ed5436dad209a46e5afc0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultColor: {fileID: 2100000, guid: 9aad9ef75cc9e469c99cad944853f4bf, type: 2}
-  highlightColor: {fileID: 2100000, guid: 59173b4edbe504be2872e7e695ac0a13, type: 2}
 --- !u!1 &7817807444887369522
 GameObject:
   m_ObjectHideFlags: 0
