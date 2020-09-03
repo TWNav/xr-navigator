@@ -125,7 +125,7 @@ public class AnchorButtonPopulator : MonoBehaviour
         existingButtons.Add(anchorProperties.anchorID, buttonToAdd);
         buttonToAdd.transform.SetSiblingIndex(0);
         SortButtons();
-        await Task.Delay(10);
+        await Task.Delay(50);
         Canvas.ForceUpdateCanvases();
         scrollBar.GetComponent<Scrollbar>().value = 1f;   
     }
