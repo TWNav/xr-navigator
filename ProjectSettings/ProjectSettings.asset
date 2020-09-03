@@ -174,7 +174,7 @@ PlayerSettings:
     iPhone: com.thoughtworks.twnavigatordemo
   buildNumber:
     iPhone: 7
-  AndroidBundleVersionCode: 13
+  AndroidBundleVersionCode: 14
   AndroidMinSdkVersion: 24
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

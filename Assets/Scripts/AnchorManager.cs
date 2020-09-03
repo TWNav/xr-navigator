@@ -29,17 +29,21 @@ public class AnchorManager : MonoBehaviour
     }
     public async void DeleteCurrentAnchor()
     {
-        if (aRTapHandler.currentSelectedAnchor.Equals(aRTapHandler.objectToPlace))
+        if (aRTapHandler.objectToPlace != null)
         {
+            Log.debug("Trying to discard anchor");
             if (anchorLerper.hasAnchorSelected)
             {
+                Log.debug("Anchor has been lerped");
                 anchorLerper.PrepareToDelete();
-
             }
+            Log.debug("Destroying");
             Destroy(aRTapHandler.objectToPlace);
+            Log.debug("Setting text");
             anchorInfoText.GetComponentInParent<FadeText>().SetText($"Anchor creation canceled");
             return;
         }
+        Log.debug("Trying to delete existing anchor");
         AnchorProperties anchorToDeleteProperties = aRTapHandler.currentSelectedAnchor.GetComponent<AnchorProperties>();
         anchorInfoText.text = $"Trying to delete anchor:\n{anchorToDeleteProperties.anchorLabel}%";
         Log.debug($"Try to Delete CloudSpatialAnchor: {currentCloudSpatialAnchor.Identifier} ");

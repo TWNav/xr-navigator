@@ -64,7 +64,9 @@ public class AnchorOptions : MonoBehaviour
     }
     public void ConfirmDeleteAnchor()
     {
+        Log.debug("confirming delete");
         anchorManager.DeleteCurrentAnchor();
+        Log.debug("deleted");
         appController.EnterSelectMode();
         appController.ShowAnchorList();
         DeleteConfirmPanel.gameObject.SetActive(false);
