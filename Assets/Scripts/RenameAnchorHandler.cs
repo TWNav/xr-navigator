@@ -114,6 +114,7 @@ public class RenameAnchorHandler : MonoBehaviour
         DeselectInputField();
         inputField.text = "";
         isInputFinished = true;
+        circleMesh.GetComponent<TextProOnACircle>().m_arcDegrees--;
         FindObjectOfType<AnchorOptions>().SaveAnchor();
     }
     public void SetObjectToRename(GameObject anchorToRename)

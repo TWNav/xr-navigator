@@ -5,9 +5,8 @@ using UnityEngine.UI;
 
 public enum AppMode
 {
-    Home,
-    Create,
     Select,
+    Create,
     Explore,
     Edit
 }
@@ -56,11 +55,6 @@ public class AppController : MonoBehaviour
     public void EnterSelectMode()
     {
         appMode = AppMode.Select;
-        ChangeTopBarState(true);
-    }
-    public void EnterHomeMode()
-    {
-        appMode = AppMode.Home;
         ChangeTopBarState(true);
     }
     public void EnterExploreMode()
