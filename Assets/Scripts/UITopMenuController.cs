@@ -54,7 +54,6 @@ public class UITopMenuController : MonoBehaviour
             if (timeSpentWaiting <= (float)waitTime)
             {
                 var propertyList = FindObjectsOfType<AnchorProperties>();
-                Log.debug($"Property Length : {propertyList.Length}");
                 foreach(AnchorProperties ap in propertyList)
                 {
                     
@@ -107,7 +106,7 @@ public class UITopMenuController : MonoBehaviour
     public async void ExploreButton()
     {
 
-        appController.appMode = AppMode.Explore;
+        appController.EnterExploreMode();
         AnchorList.SetActive(true);
         AnchorOptions.SetActive(false);
         anchorInfoText.gameObject.SetActive(false);

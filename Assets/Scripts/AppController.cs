@@ -15,7 +15,7 @@ public class AppController : MonoBehaviour
 {
 
 
-    public AppMode appMode;
+    public AppMode appMode = AppMode.Select;
     private AppModeEvent appModeEventSender;
     private ARTapHandler aRTapHandler;
 

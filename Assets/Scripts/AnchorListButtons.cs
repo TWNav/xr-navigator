@@ -12,6 +12,7 @@ public class AnchorListButtons : MonoBehaviour
     private ARTapHandler aRTapHandler;
     [SerializeField]
     private GameObject anchorsAwayPanel;
+    private bool hasAddedAnAnchorInSession;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +20,7 @@ public class AnchorListButtons : MonoBehaviour
         appController = FindObjectOfType<AppController>();
         aRTapHandler = FindObjectOfType<ARTapHandler>();
         anchorsAwayPanel.SetActive(false);
+        hasAddedAnAnchorInSession = false;
     }
 
     // Update is called once per frame
@@ -30,7 +32,11 @@ public class AnchorListButtons : MonoBehaviour
     {
         appController.EnterCreateMode();
         AnchorList.SetActive(false);
-        anchorsAwayPanel.SetActive(true);
+        if(!hasAddedAnAnchorInSession)
+        {
+            anchorsAwayPanel.SetActive(true);
+            hasAddedAnAnchorInSession = true;
+        }
         if(aRTapHandler.objectToPlace != null)
         {
             appController.ShowNewAnchorOptions();
