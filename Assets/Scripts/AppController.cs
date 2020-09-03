@@ -28,6 +28,8 @@ public class AppController : MonoBehaviour
     private GameObject exploreButton;
     [SerializeField]
     private GameObject newAnchorOptions;
+    [SerializeField]
+    private GameObject createMapButton;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,61 +37,43 @@ public class AppController : MonoBehaviour
         ShowAnchorList();
     }
 
-    void ModeSwitch(AppMode mode)
-    {
-        switch (mode)
-        {
-            case AppMode.Home:
-                exploreButton.GetComponent<Button>().interactable = true;
-                break;
-            case AppMode.Create:
-                exploreButton.GetComponent<Button>().interactable = true;
-                break;
-            case AppMode.Select:
-                exploreButton.GetComponent<Button>().interactable = true;
-                break;
-            case AppMode.Explore:
-                exploreButton.GetComponent<Button>().interactable = true; 
-                break;
-            case AppMode.Edit:
-                exploreButton.GetComponent<Button>().interactable = false;
-                break;
-
-            default:
-                break;
-        }
-    }
     // Update is called once per frame
     void Update()
     {
 
     }
 
+    private void ChangeTopBarState(bool isEnabled) {
+        exploreButton.GetComponent<Button>().interactable = isEnabled;
+        createMapButton.GetComponent<Button>().interactable = isEnabled;
+    }
+
     public void EnterCreateMode()
     {
         appMode = AppMode.Create;
-        exploreButton.GetComponent<Button>().interactable = true;
+        ChangeTopBarState(true);
     }
     public void EnterSelectMode()
     {
         appMode = AppMode.Select;
-        exploreButton.GetComponent<Button>().interactable = true;
+        ChangeTopBarState(true);
     }
     public void EnterHomeMode()
     {
         appMode = AppMode.Home;
-        exploreButton.GetComponent<Button>().interactable = true;
+        ChangeTopBarState(true);
     }
     public void EnterExploreMode()
     {
         appMode = AppMode.Explore;
-        exploreButton.GetComponent<Button>().interactable = true;
+        ChangeTopBarState(true);
     }
     public void EnterEditMode()
     {
         appMode = AppMode.Edit;
-        exploreButton.GetComponent<Button>().interactable = false;
+        ChangeTopBarState(false);
     }
+
     public void ShowExistingAnchorOptions()
     {
         anchorList.SetActive(false);
