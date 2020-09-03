@@ -11,6 +11,11 @@ public class ResizeButtonFont : MonoBehaviour
     private GameObject topButtonContainer;
     async void Start()
     {
+        await ResizeFont();
+    }
+
+    public async Task ResizeFont()
+    {
         await Task.Delay(10);
         Canvas.ForceUpdateCanvases(); 
         float smallestFontSizeInButtonWell = 1000f;
@@ -39,6 +44,17 @@ public class ResizeButtonFont : MonoBehaviour
             var text = button.GetComponentInChildren<TMP_Text>();
             text.enableAutoSizing = false;
             text.fontSize = smallestFontSizeInButtonWell;
+        }
+        return;
+    }
+
+    public void EnableAutoSizing()
+    {
+        var buttons = GetComponentsInChildren<Button>();
+
+        foreach (Button button in buttons)
+        {
+            button.GetComponentInChildren<TMP_Text>().enableAutoSizing = true;
         }
     }
 }

@@ -80,6 +80,25 @@ public class AnchorButtonPopulator : MonoBehaviour
         Canvas.ForceUpdateCanvases();
         scrollBar.GetComponent<Scrollbar>().value = 1f;
         Log.debug($"Value before: {scrollBar.GetComponent<Scrollbar>().value}");
+        var buttonResizers = Resources.FindObjectsOfTypeAll(typeof(ResizeButtonFont));
+        foreach(ResizeButtonFont buttonResizer in buttonResizers)
+        {
+            if(buttonResizer.gameObject.name.Equals("Top Button Container"))
+            {
+                Log.debug($"Trying to resize font within {buttonResizer.gameObject.name}");
+                buttonResizer.EnableAutoSizing();
+                await buttonResizer.ResizeFont();
+            } 
+        }
+        foreach(ResizeButtonFont buttonResizer in buttonResizers)
+        {
+            if(!buttonResizer.gameObject.name.Equals("Top Button Container"))
+            {
+                Log.debug($"Trying to resize font within {buttonResizer.gameObject.name}");
+                buttonResizer.EnableAutoSizing();
+                await buttonResizer.ResizeFont();
+            } 
+        }
     }
 
     public async void AddAnchorToButtonList(AnchorProperties anchorProperties)
