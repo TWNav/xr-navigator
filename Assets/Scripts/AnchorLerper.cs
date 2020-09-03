@@ -33,13 +33,20 @@ public class AnchorLerper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(lerpingFromContainerToCamera)
+        if (lerpingFromContainerToCamera)
         {
             lerpingFromContainerToCamera = !LerpToTransform(currentRenderTransform.transform, anchorContainerTransform.transform, cameraContainerTransform.transform);
         }
         else if (lerpingFromCameraToContainer)
         {
+            renderToLerp.GetComponentInChildren<TMP_Text>().enabled = false;
+            renderToLerp.GetComponentInChildren<TMP_Text>().enabled = true;
             lerpingFromCameraToContainer = !LerpToTransform(currentRenderTransform.transform, cameraContainerTransform.transform, anchorContainerTransform.transform);
+            if (!lerpingFromCameraToContainer)
+            {
+                renderToLerp.GetComponentInChildren<TMP_Text>().enabled = false;
+                renderToLerp.GetComponentInChildren<TMP_Text>().enabled = true;
+            }
         }
     }
 
@@ -48,22 +55,23 @@ public class AnchorLerper : MonoBehaviour
         bool lerpComplete = true;
 
         currentLerpTime += Time.deltaTime;
-        if(currentLerpTime > timeToFocus)
+        if (currentLerpTime > timeToFocus)
         {
             currentLerpTime = timeToFocus;
         }
 
-        if(Vector3.Distance(objectToLerp.position, destinationTransform.position) > 0.001f)
+        if (Vector3.Distance(objectToLerp.position, destinationTransform.position) > 0.001f)
         {
             objectToLerp.position = Vector3.Lerp(originTransform.position, destinationTransform.position, currentLerpTime / timeToFocus);
-            objectToLerp.rotation = Quaternion.Lerp( originTransform.rotation, destinationTransform.rotation, currentLerpTime / timeToFocus);
+            objectToLerp.rotation = Quaternion.Lerp(originTransform.rotation, destinationTransform.rotation, currentLerpTime / timeToFocus);
             objectToLerp.localScale = Vector3.Lerp(startingScale, targetScale, currentLerpTime / timeToFocus);
             lerpComplete = false;
         }
-        else{
+        else
+        {
             Log.debug("Resetting currentLerpTime");
             currentLerpTime = 0;
-            if(!inAnchorContainer)
+            if (!inAnchorContainer)
             {
                 StopRotation();
             }
@@ -84,7 +92,7 @@ public class AnchorLerper : MonoBehaviour
     public void SelectAnchor(GameObject anchorToLerp)
     {
         Debug.Log("Calling the lerp");
-        if(inAnchorContainer && !(lerpingFromCameraToContainer || lerpingFromContainerToCamera))
+        if (inAnchorContainer && !(lerpingFromCameraToContainer || lerpingFromContainerToCamera))
         {
             Debug.Log($"anchorToLerp is : {anchorToLerp.GetInstanceID()}");
             renderToLerp = anchorToLerp.transform.GetChild(0).gameObject;
@@ -94,7 +102,7 @@ public class AnchorLerper : MonoBehaviour
 
             renderToLerp.transform.SetParent(cameraContainerTransform);
             currentRenderTransform = renderToLerp.transform;
-            targetScale = new Vector3(1,1,1);
+            targetScale = new Vector3(1, 1, 1);
             startingScale = renderToLerp.transform.localScale;
             lerpingFromCameraToContainer = false;
             lerpingFromContainerToCamera = true;
@@ -112,7 +120,7 @@ public class AnchorLerper : MonoBehaviour
     }
     public void SubmitAnchor()
     {
-        if(!inAnchorContainer && !(lerpingFromCameraToContainer || lerpingFromContainerToCamera))
+        if (!inAnchorContainer && !(lerpingFromCameraToContainer || lerpingFromContainerToCamera))
         {
             renderToLerp.transform.SetParent(anchorContainerTransform);
             currentRenderTransform = renderToLerp.transform;
@@ -125,14 +133,16 @@ public class AnchorLerper : MonoBehaviour
             inAnchorContainer = true;
             renderToLerp.GetComponentInChildren<RotateCircle>().enabled = true;
         }
-        else{
-            if(anchorToLerp == null)
+        else
+        {
+            if (anchorToLerp == null)
             {
                 renderToLerp = FindObjectOfType<ARTapHandler>().currentSelectedAnchor.transform.GetChild(0).gameObject;
             }
             renderToLerp.GetComponentInChildren<TMP_Text>().enabled = false;
             renderToLerp.GetComponentInChildren<TMP_Text>().enabled = true;
         }
+
     }
     public void ResetLerper()
     {
