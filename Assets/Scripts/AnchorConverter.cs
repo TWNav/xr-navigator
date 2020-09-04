@@ -233,7 +233,7 @@ public class AnchorConverter : MonoBehaviour
         {
             progressBar.SetActive(true);
             Log.debug($"Not enough environmental data : {spatialAnchorManager.SessionStatus.RecommendedForCreateProgress}");
-            anchorInfoText.text = $"Look around to gather more data:";
+            anchorInfoText.text = $"Look around to gather more data";
             progressBar.GetComponent<Slider>().value = spatialAnchorManager.SessionStatus.RecommendedForCreateProgress;
             await Task.Delay(333);
         }

@@ -45,7 +45,7 @@ public class AnchorManager : MonoBehaviour
         }
         Log.debug("Trying to delete existing anchor");
         AnchorProperties anchorToDeleteProperties = aRTapHandler.currentSelectedAnchor.GetComponent<AnchorProperties>();
-        anchorInfoText.text = $"Trying to delete anchor:\n{anchorToDeleteProperties.anchorLabel}%";
+        anchorInfoText.text = $"Deleting anchor:\n{anchorToDeleteProperties.anchorLabel}...";
         Log.debug($"Try to Delete CloudSpatialAnchor: {currentCloudSpatialAnchor.Identifier} ");
         await spatialAnchorManager.DeleteAnchorAsync(currentCloudSpatialAnchor);
         Log.debug($"CloudSpatialAnchor is Deleted: {currentCloudSpatialAnchor.Identifier}");
